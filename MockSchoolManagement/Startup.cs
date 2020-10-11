@@ -32,6 +32,8 @@ namespace MockSchoolManagement
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
+
             //测试终端中间件特性(app);
 
             实践中间件工作流程(app, logger);
