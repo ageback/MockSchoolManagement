@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace MockSchoolManagement
 {
@@ -24,13 +25,56 @@ namespace MockSchoolManagement
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            //测试终端中间件特性(app);
+
+            实践中间件工作流程(app, logger);
+
+            //app.UseRouting();
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapGet("/", async context =>
+            //    {
+            //        await context.Response.WriteAsync("Hello World!");
+            //    });
+            //});
+        }
+
+        private static void 实践中间件工作流程(IApplicationBuilder app, ILogger<Startup> logger)
+        {
+            app.Use(async (context, next) =>
+            {
+                context.Response.ContentType = "text/plain;charset=utf-8";
+                logger.LogInformation("MW1:传入请求");
+                await next();
+                logger.LogInformation("MW1:传出请求");
+
+            });
+
+            app.Use(async (context, next) =>
+            {
+                logger.LogInformation("MW2:传入请求");
+                await next();
+                logger.LogInformation("MW2:传出请求");
+
+            });
+
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("MW3: 处理请求并生成响应");
+                logger.LogInformation("MW3:处理请求并生成响应");
+            });
+        }
+
+        private static void 测试终端中间件特性(IApplicationBuilder app)
+        {
             app.Run(async (context) =>
             {
                 // 防止乱码
@@ -42,16 +86,6 @@ namespace MockSchoolManagement
             {
                 await context.Response.WriteAsync("从第二个中间件中打印Hello World.");
             });
-
-            //app.UseRouting();
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapGet("/", async context =>
-            //    {
-            //        await context.Response.WriteAsync("Hello World!");
-            //    });
-            //});
         }
     }
 }
