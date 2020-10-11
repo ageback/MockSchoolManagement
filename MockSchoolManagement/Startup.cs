@@ -35,18 +35,23 @@ namespace MockSchoolManagement
             {
                 // 防止乱码
                 context.Response.ContentType = "text/plain;charset=utf-8";
-                await context.Response.WriteAsync(_configuration["MyKey"]);
+                await context.Response.WriteAsync("从第一个中间件中打印Hello World.");
             });
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
+            app.Run(async (context) =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                await context.Response.WriteAsync("从第二个中间件中打印Hello World.");
             });
+
+            //app.UseRouting();
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapGet("/", async context =>
+            //    {
+            //        await context.Response.WriteAsync("Hello World!");
+            //    });
+            //});
         }
     }
 }
