@@ -29,14 +29,27 @@ namespace MockSchoolManagement
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                DeveloperExceptionPageOptions options = new DeveloperExceptionPageOptions
+                {
+                    SourceCodeLineCount = 3
+                };
+
+                app.UseDeveloperExceptionPage(options);
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             //测试终端中间件特性(app);
 
-            实践中间件工作流程(app, logger);
+            //实践中间件工作流程(app, logger);
+
+            
+
+            app.Run(async (context) => {
+                throw new Exception("主动抛异常");
+                await context.Response.WriteAsync("Hello World!");
+            });
 
             //app.UseRouting();
 
