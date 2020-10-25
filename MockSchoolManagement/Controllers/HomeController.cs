@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.DataRepositories;
+using MockSchoolManagement.Models;
 
 namespace MockSchoolManagement.Controllers
 {
@@ -15,6 +16,13 @@ namespace MockSchoolManagement.Controllers
         {
             _studentRepository = studentRepository;
         }
+
+        public ObjectResult Details()
+        {
+            Student model = _studentRepository.GetStudent(1);
+            return new ObjectResult(model);
+        }
+
         public string Index()
         {
             return _studentRepository.GetStudent(1).Name;
