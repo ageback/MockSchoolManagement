@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MockSchoolManagement.DataRepositories;
 
 namespace MockSchoolManagement
 {
@@ -22,6 +23,8 @@ namespace MockSchoolManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews(a => a.EnableEndpointRouting = false);
+            services.AddSingleton<IStudentRepository, MockStudentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,8 +40,14 @@ namespace MockSchoolManagement
                 app.UseDeveloperExceptionPage(options);
             }
 
-            app.UseDefaultFiles();
+            //app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseMvcWithDefaultRoute();
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
+
 
             //测试终端中间件特性(app);
 
@@ -46,10 +55,10 @@ namespace MockSchoolManagement
 
             
 
-            app.Run(async (context) => {
-                throw new Exception("主动抛异常");
-                await context.Response.WriteAsync("Hello World!");
-            });
+            //app.Run(async (context) => {
+            //    throw new Exception("主动抛异常");
+            //    await context.Response.WriteAsync("Hello World!");
+            //});
 
             //app.UseRouting();
 

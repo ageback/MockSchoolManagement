@@ -5,4 +5,8 @@
     <UserSecretsId>da0ae067-664d-4d20-912b-47728158c87b</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\" />
+  </ItemGroup>
+
 </Project>
