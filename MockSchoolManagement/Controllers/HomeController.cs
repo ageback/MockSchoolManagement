@@ -17,6 +17,7 @@ namespace MockSchoolManagement.Controllers
             _studentRepository = studentRepository;
         }
 
+        // 从控制器中返回协商内容
         public ObjectResult Details()
         {
             Student model = _studentRepository.GetStudent(1);
