@@ -1,0 +1,31 @@
+﻿@model IEnumerable<MockSchoolManagement.Models.Student>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+
+    </title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>名字</th>
+                <th>主修科目</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.Id</td>
+                    <td>@s.Name</td>
+                    <td>@s.Major</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

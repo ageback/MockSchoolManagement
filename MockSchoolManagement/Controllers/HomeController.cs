@@ -52,9 +52,10 @@ namespace MockSchoolManagement.Controllers
             return View(model);
         }
 
-        public string Index()
+        public ViewResult Index()
         {
-            return _studentRepository.GetStudent(1).Name;
+            var model = _studentRepository.GetAllStudents();
+            return View(model);
         }
     }
 }

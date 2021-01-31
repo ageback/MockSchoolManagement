@@ -31,5 +31,10 @@ namespace MockSchoolManagement.DataRepositories
         {
             throw new NotImplementedException();
         }
+
+        IEnumerable<Student> IStudentRepository.GetAllStudents()
+        {
+            return _studentList;
+        }
     }
 }
