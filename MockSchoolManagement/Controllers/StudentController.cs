@@ -21,5 +21,11 @@ namespace MockSchoolManagement.Controllers
             Student model = studentRepository.GetStudent(id);
             return View(model);
         }
+
+        public JsonResult DetailsJson()
+        {
+            Student model = studentRepository.GetStudent(2);
+            return Json(model);
+        }
     }
 }
