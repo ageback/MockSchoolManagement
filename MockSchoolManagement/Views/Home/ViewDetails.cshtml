@@ -1,22 +1,19 @@
-﻿
+﻿@model MockSchoolManagement.Models.Student
 
 <html>
-    <head>
-        <title>
+<head>
+    <title>
 
-        </title>
-    </head>
-    <body>
-        <h3>@ViewBag.PageTitle</h3>
+    </title>
+</head>
+<body>
+    <h3>@ViewBag.PageTitle</h3>
+    <div>
+        姓名：@Model.Name
+    </div>
+    <div>
+        主修科目：@Model.Major
+    </div>
 
-
-        
-        <div>
-            姓名：@ViewBag.Student.Name
-        </div>
-        <div>
-            主修科目：@ViewBag.Student.Major
-        </div>
-       
-    </body>
+</body>
 </html>

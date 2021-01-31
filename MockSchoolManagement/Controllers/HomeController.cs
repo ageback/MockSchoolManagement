@@ -33,11 +33,8 @@ namespace MockSchoolManagement.Controllers
         public ViewResult ViewDetails()
         {
             Student model = _studentRepository.GetStudent(1);
-            //ViewData["PageTitle"] = "学生详情";
-            //ViewData["Student"] = model;
             ViewBag.PageTitle = "学生详情";
-            ViewBag.Student = model;
-            return View();
+            return View(model);
         }
 
         public string Index()
