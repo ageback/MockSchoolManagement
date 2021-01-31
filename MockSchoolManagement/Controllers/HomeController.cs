@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.DataRepositories;
 using MockSchoolManagement.Models;
+using MockSchoolManagement.ViewModels;
 
 namespace MockSchoolManagement.Controllers
 {
@@ -34,6 +35,20 @@ namespace MockSchoolManagement.Controllers
         {
             Student model = _studentRepository.GetStudent(1);
             ViewBag.PageTitle = "学生详情";
+            return View(model);
+        }
+
+        /// <summary>
+        /// 在视图中使用 ViewModel
+        /// </summary>
+        /// <returns></returns>
+        public ViewResult VMDetails()
+        {
+            HomeVMDetailsViewModel model = new HomeVMDetailsViewModel()
+            {
+                student = _studentRepository.GetStudent(3),
+                PageTitle = "学生详情"
+            };
             return View(model);
         }
 
