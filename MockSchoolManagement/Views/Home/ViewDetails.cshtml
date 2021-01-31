@@ -1,5 +1,8 @@
 ﻿@model MockSchoolManagement.Models.Student
-
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "学生详情222";
+}
 <html>
 <head>
     <title>
@@ -15,5 +18,8 @@
         主修科目：@Model.Major
     </div>
 
+    @section Scripts{
+        <script src="~/js/CustomScript.js"></script>
+    }
 </body>
 </html>
