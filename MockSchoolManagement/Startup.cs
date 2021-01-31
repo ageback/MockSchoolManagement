@@ -43,7 +43,6 @@ namespace MockSchoolManagement
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseMvc();
             //app.UseMvcWithDefaultRoute();
             //app.Run(async (context) =>
             //{
@@ -55,14 +54,18 @@ namespace MockSchoolManagement
 
             //实践中间件工作流程(app, logger);
 
-            
+
 
             //app.Run(async (context) => {
             //    throw new Exception("主动抛异常");
             //    await context.Response.WriteAsync("Hello World!");
             //});
 
-            //app.UseRouting();
+            app.UseRouting();
+            app.UseEndpoints(ep =>
+            {
+                ep.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
 
             //app.UseEndpoints(endpoints =>
             //{

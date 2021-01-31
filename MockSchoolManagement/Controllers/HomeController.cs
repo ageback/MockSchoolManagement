@@ -9,7 +9,7 @@ using MockSchoolManagement.ViewModels;
 
 namespace MockSchoolManagement.Controllers
 {
-    [Route("Home")]
+    
     public class HomeController : Controller
     {
         private readonly IStudentRepository _studentRepository;
@@ -19,7 +19,7 @@ namespace MockSchoolManagement.Controllers
             _studentRepository = studentRepository;
         }
 
-        [Route("Details")]
+       
         /// <summary>
         /// 从控制器中返回协商内容
         /// </summary>
@@ -33,7 +33,6 @@ namespace MockSchoolManagement.Controllers
         /// 使用 ViewData或ViewBag 传递数据到View
         /// </summary>
         /// <returns></returns>
-        [Route("ViewDetails/{id?}")]
         public ViewResult ViewDetails(int? id)
         {
             Student model = _studentRepository.GetStudent(id??1);
@@ -45,8 +44,6 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
-        
-        [Route("VMDetails/{id?}")]
         public ViewResult VMDetails(int? id)
         {
             HomeVMDetailsViewModel model = new HomeVMDetailsViewModel()
@@ -57,9 +54,6 @@ namespace MockSchoolManagement.Controllers
             return View(model);
         }
 
-        [Route("/")]
-        [Route("")]
-        [Route("Index")]
         public ViewResult Index()
         {
             var model = _studentRepository.GetAllStudents();
