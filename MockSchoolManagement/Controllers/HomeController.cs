@@ -27,14 +27,16 @@ namespace MockSchoolManagement.Controllers
         }
 
         /// <summary>
-        /// 使用 ViewData 传递数据到View
+        /// 使用 ViewData或ViewBag 传递数据到View
         /// </summary>
         /// <returns></returns>
         public ViewResult ViewDetails()
         {
             Student model = _studentRepository.GetStudent(1);
-            ViewData["PageTitle"] = "学生详情";
-            ViewData["Student"] = model;
+            //ViewData["PageTitle"] = "学生详情";
+            //ViewData["Student"] = model;
+            ViewBag.PageTitle = "学生详情";
+            ViewBag.Student = model;
             return View();
         }
 
