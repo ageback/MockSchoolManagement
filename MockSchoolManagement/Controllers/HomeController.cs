@@ -17,11 +17,25 @@ namespace MockSchoolManagement.Controllers
             _studentRepository = studentRepository;
         }
 
-        // 从控制器中返回协商内容
+        /// <summary>
+        /// 从控制器中返回协商内容
+        /// </summary>
         public ObjectResult Details()
         {
             Student model = _studentRepository.GetStudent(1);
             return new ObjectResult(model);
+        }
+
+        /// <summary>
+        /// 使用 ViewData 传递数据到View
+        /// </summary>
+        /// <returns></returns>
+        public ViewResult ViewDetails()
+        {
+            Student model = _studentRepository.GetStudent(1);
+            ViewData["PageTitle"] = "学生详情";
+            ViewData["Student"] = model;
+            return View();
         }
 
         public string Index()

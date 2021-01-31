@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Folder Include="Views\Student\" />
   </ItemGroup>
 
 </Project>
