@@ -31,10 +31,10 @@ namespace MockSchoolManagement.Controllers
         /// 使用 ViewData或ViewBag 传递数据到View
         /// </summary>
         /// <returns></returns>
-        [Route("Home/ViewDetails/{id}")]
-        public ViewResult ViewDetails(int id)
+        [Route("Home/ViewDetails/{id?}")]
+        public ViewResult ViewDetails(int? id)
         {
-            Student model = _studentRepository.GetStudent(id);
+            Student model = _studentRepository.GetStudent(id??1);
             ViewBag.PageTitle = "学生详情";
             return View(model);
         }
