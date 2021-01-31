@@ -31,9 +31,10 @@ namespace MockSchoolManagement.Controllers
         /// 使用 ViewData或ViewBag 传递数据到View
         /// </summary>
         /// <returns></returns>
-        public ViewResult ViewDetails()
+        [Route("Home/ViewDetails/{id}")]
+        public ViewResult ViewDetails(int id)
         {
-            Student model = _studentRepository.GetStudent(1);
+            Student model = _studentRepository.GetStudent(id);
             ViewBag.PageTitle = "学生详情";
             return View(model);
         }
@@ -42,6 +43,7 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
+        
         public ViewResult VMDetails()
         {
             HomeVMDetailsViewModel model = new HomeVMDetailsViewModel()
@@ -52,6 +54,9 @@ namespace MockSchoolManagement.Controllers
             return View(model);
         }
 
+        [Route("")]
+        [Route("Home")]
+        [Route("Home/Index")]
         public ViewResult Index()
         {
             var model = _studentRepository.GetAllStudents();

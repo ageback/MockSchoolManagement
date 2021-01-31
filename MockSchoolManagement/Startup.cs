@@ -43,11 +43,12 @@ namespace MockSchoolManagement
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.UseMvc();
+            //app.UseMvcWithDefaultRoute();
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Hello World!");
+            //});
 
 
             //测试终端中间件特性(app);
