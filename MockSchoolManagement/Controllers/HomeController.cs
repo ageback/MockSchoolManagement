@@ -23,11 +23,11 @@ namespace MockSchoolManagement.Controllers
         /// <summary>
         /// 从控制器中返回协商内容
         /// </summary>
-        public ObjectResult Details()
-        {
-            Student model = _studentRepository.GetStudent(1);
-            return new ObjectResult(model);
-        }
+        //public ObjectResult Details()
+        //{
+        //    Student model = _studentRepository.GetStudent(1);
+        //    return new ObjectResult(model);
+        //}
 
         /// <summary>
         /// 使用 ViewData或ViewBag 传递数据到View
@@ -44,11 +44,11 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
-        public ViewResult VMDetails(int? id)
+        public ViewResult Details(int? id)
         {
-            HomeVMDetailsViewModel model = new HomeVMDetailsViewModel()
+            HomeDetailsViewModel model = new HomeDetailsViewModel()
             {
-                student = _studentRepository.GetStudent(id??1),
+                student = _studentRepository.GetStudent(id ?? 1),
                 PageTitle = "学生详情"
             };
             return View(model);

@@ -3,12 +3,15 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="~/css/site.css" rel="stylesheet"/>
     <title>@ViewBag.Title</title>
 </head>
 <body>
-    <div>
-        @RenderBody()
+    <div class="container">
+        @*添加bootstrap的样式类container*@ @RenderBody()
     </div>
-    @RenderSection("Scripts", required: false)
+
+    @if (IsSectionDefined("Scripts")) {@RenderSection("Scripts", required: false)}
 </body>
 </html>

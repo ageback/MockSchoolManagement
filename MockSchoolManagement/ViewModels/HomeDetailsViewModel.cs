@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MockSchoolManagement.ViewModels
 {
-    public class HomeVMDetailsViewModel
+    public class HomeDetailsViewModel
     {
         public Student student { get; set; }
         public string PageTitle { get; set; }

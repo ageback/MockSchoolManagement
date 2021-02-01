@@ -1,31 +1,25 @@
-﻿@model IEnumerable<MockSchoolManagement.Models.Student>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>
+﻿@model IEnumerable<Student>
 
-    </title>
-</head>
-<body>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>名字</th>
-                <th>主修科目</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var s in Model)
-            {
-                <tr>
-                    <td>@s.Id</td>
-                    <td>@s.Name</td>
-                    <td>@s.Major</td>
-                </tr>
-            }
-        </tbody>
-    </table>
 
-</body>
-</html>
+@{ ViewBag.Title = "学生列表页面";}
+<div class="card-deck">
+    @foreach(var s in Model)
+    {
+    <div class="card m-3">
+        <div class="card-header">
+            <h3 class="card-title">@s.Name</h3>
+        </div>
+
+        <img class="card-img-top" src="~/images/noimage.png" />
+
+        <div class="card-body text-center">
+            <h5 class="card-title">主修科目：@s.Major</h5>
+        </div>
+        <div class="card-footer text-center">
+            <a href="#" class="btn btn-primary">查看</a>
+            <a href="#" class="btn btn-primary">编辑</a>
+            <a href="#" class="btn btn-danger">删除</a>
+        </div>
+    </div>
+    }
+</div>   
