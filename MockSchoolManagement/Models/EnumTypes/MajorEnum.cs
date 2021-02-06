@@ -7,7 +7,7 @@ namespace MockSchoolManagement.Models.EnumTypes
 {
     public enum MajorEnum
     {
-        None,
+        无,
         计算机科学,
         物流,
         电子商务
