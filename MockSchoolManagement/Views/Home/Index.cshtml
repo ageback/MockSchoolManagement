@@ -23,3 +23,59 @@
     </div>
     }
 </div>   
+
+<script>
+    let a = 6;
+    let b = 9;
+
+    function simpleTag(strings, va,vb,vsum) {
+        console.log(strings);
+        console.log(va);
+        console.log(vb);
+        console.log(vsum);
+
+        return 'foobar';
+    }
+
+    let untaggedResult = `${ a }+${ b }=${ a + b }`;
+    let taggedResult = simpleTag`${ a }+${ b }=${ a + b }`;
+
+    console.log(untaggedResult);
+    console.log(taggedResult);
+
+
+    function greet(arg1, arg2, arg3) {
+        console.log(arg1);
+        console.log(arg2);
+        console.log(arg3);
+    }
+    var name = 'lmh';
+    var age = 41;
+    // 普通函数
+    greet(["I'm ", ". I'm ", " years old."], name, age);
+
+    // tag 函数
+    greet`I'm ${name}. I'm ${age} years old.`;
+
+
+    /////////// Symbol 作为属性
+    let s1 = Symbol('foo'),
+        s2 = Symbol('bar'),
+        s3 = Symbol('baz'),
+        s4 = Symbol('qux');
+
+    let o = { [s1]: 'foo val' };
+    //这样也可以
+    o[s1] = 'foo val';
+    console.log(o);
+
+    Object.defineProperty(o, s2, { value: 'bar val' });
+    console.log(o);
+
+    Object.defineProperties(o, {
+        [s3]: { value: 'baz val' },
+        [s4]: { value: 'qux val' }
+    });
+    console.log(o);
+   
+</script>
