@@ -59,5 +59,14 @@ namespace MockSchoolManagement.Controllers
             var model = _studentRepository.GetAllStudents();
             return View(model);
         }
+
+        /// <summary>
+        /// 创建学生信息
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }

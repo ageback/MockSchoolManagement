@@ -1,0 +1,15 @@
+﻿@using MockSchoolManagement.Models.EnumTypes
+@model Student
+
+@{ ViewBag.Title = "创建学生信息"; }
+<form asp-controller="home" asp-action="create" method="post">
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Major"></label>
+        <select asp-for="Major" asp-items="Html.GetEnumSelectList<MajorEnum>()"></select>
+    </div>
+    <button type="submit">创建</button>
+</form>

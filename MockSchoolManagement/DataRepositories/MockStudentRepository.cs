@@ -1,4 +1,5 @@
 ﻿using MockSchoolManagement.Models;
+using MockSchoolManagement.Models.EnumTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace MockSchoolManagement.DataRepositories
         {
             _studentList = new List<Student>()
             {
-                new Student() { Id = 1, Name = "张三", Major = "计算机科学" },
-                new Student() { Id = 2, Name = "李四", Major = "物流" },
-                new Student() { Id = 3, Name = "王五", Major = "电子商务" }
+                new Student() { Id = 1, Name = "张三", Major =MajorEnum.计算机科学 },
+                new Student() { Id = 2, Name = "李四", Major = MajorEnum.物流 },
+                new Student() { Id = 3, Name = "王五", Major = MajorEnum.电子商务 }
             };
 
         }
