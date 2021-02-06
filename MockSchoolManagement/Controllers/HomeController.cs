@@ -54,6 +54,11 @@ namespace MockSchoolManagement.Controllers
             return View(model);
         }
 
+        public string MoDetails(int? id, string name)
+        {
+            return "id = " + id.Value.ToString() + " 并且 名字 = " + name;
+        }
+
         public ViewResult Index()
         {
             var model = _studentRepository.GetAllStudents();
@@ -64,9 +69,19 @@ namespace MockSchoolManagement.Controllers
         /// 创建学生信息
         /// </summary>
         /// <returns></returns>
-        public IActionResult Create()
+        [HttpPost]
+        public RedirectToActionResult Create(Student student)
+        {
+            Student newStudent = _studentRepository.Add(student);
+            return RedirectToAction("Details", new { id = newStudent.Id });
+        }
+
+        [HttpGet]
+        public ViewResult Create()
         {
             return View();
         }
+
+
     }
 }

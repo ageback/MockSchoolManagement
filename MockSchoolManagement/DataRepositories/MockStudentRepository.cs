@@ -22,6 +22,14 @@ namespace MockSchoolManagement.DataRepositories
 
         }
 
+        public Student Add(Student student)
+        {
+            student.Id = _studentList.Max(s => s.Id) + 1;
+            _studentList.Add(student);
+            return student;
+        }
+
+        
 
         public Student GetStudent(int id)
         {
