@@ -15,5 +15,10 @@ namespace MockSchoolManagement.Infrastructure
         }
 
         public DbSet<Student> Students { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Seed();
+        }
     }
 }
