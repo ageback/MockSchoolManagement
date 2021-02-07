@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MockSchoolManagement.DataRepositories;
+using MockSchoolManagement.Infrastructure;
 
 namespace MockSchoolManagement
 {
@@ -23,8 +25,11 @@ namespace MockSchoolManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // 使用 sqlserver 数据库，通过IConfiguration访问去获取，自定义名称的MockStudentDBConnection作为连接字符串
+            services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("MockStudentDBConnection")));
             services.AddControllersWithViews(a => a.EnableEndpointRouting = false).AddXmlSerializerFormatters();
-            services.AddSingleton<IStudentRepository, MockStudentRepository>();
+            services.AddScoped<IStudentRepository, SQLStudentRepository>();
+            //services.AddSingleton<IStudentRepository, MockStudentRepository>();
             //services.AddScoped<IStudentRepository, MockStudentRepository>();
             //services.AddTransient<IStudentRepository, MockStudentRepository>();
             

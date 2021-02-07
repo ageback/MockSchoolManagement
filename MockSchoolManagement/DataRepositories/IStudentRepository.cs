@@ -10,7 +10,10 @@ namespace MockSchoolManagement.DataRepositories
     {
         Student GetStudent(int id);
         IEnumerable<Student> GetAllStudents();
-        void Save(Student student);
-        Student Add(Student student);
+
+        Student Insert(Student student);
+        Student Update(Student updateStudent);
+
+        Student Delete(int id);
     }
 }

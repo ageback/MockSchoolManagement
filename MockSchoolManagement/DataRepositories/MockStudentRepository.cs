@@ -22,23 +22,43 @@ namespace MockSchoolManagement.DataRepositories
 
         }
 
-        public Student Add(Student student)
+        public Student Insert(Student student)
         {
-            student.Id = _studentList.Max(s => s.Id) + 1;
+            student.Id = GetNewStudentId();
             _studentList.Add(student);
             return student;
         }
 
-        
+        private int GetNewStudentId()
+        {
+            return _studentList.Max(s => s.Id) + 1;
+        }
+
+        public Student Delete(int id)
+        {
+            Student student = _studentList.FirstOrDefault(s => s.Id == id);
+            if (student != null)
+            {
+                _studentList.Remove(student);
+            }
+            return student;
+        }
 
         public Student GetStudent(int id)
         {
             return _studentList.FirstOrDefault(a => a.Id == id);
-        }
+        }        
 
-        public void Save(Student student)
+        public Student Update(Student updateStudent)
         {
-            throw new NotImplementedException();
+            Student student = _studentList.FirstOrDefault(s => s.Id == updateStudent.Id);
+            if (student != null)
+            {
+                student.Name = updateStudent.Name;
+                student.Email = updateStudent.Email;
+                student.Major = updateStudent.Major;
+            }
+            return student;
         }
 
         IEnumerable<Student> IStudentRepository.GetAllStudents()
