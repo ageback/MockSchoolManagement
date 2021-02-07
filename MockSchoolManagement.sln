@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockSchoolManagement", "MockSchoolManagement\MockSchoolManagement.csproj", "{D5CD321B-F314-4E43-BDE0-8BDD83022340}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockSchoolManagement", "MockSchoolManagement\MockSchoolManagement.csproj", "{D5CD321B-F314-4E43-BDE0-8BDD83022340}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockSchoolManagement.Bll", "MockSchoolManagement.Bll\MockSchoolManagement.Bll.csproj", "{249EB4F9-B578-4E20-906D-B044FA85A863}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MockSchoolManagement.Dal", "MockSchoolManagement.Dal\MockSchoolManagement.Dal.csproj", "{7E7912B3-18EC-406D-9D46-5BE30C50A0E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{D5CD321B-F314-4E43-BDE0-8BDD83022340}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5CD321B-F314-4E43-BDE0-8BDD83022340}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5CD321B-F314-4E43-BDE0-8BDD83022340}.Release|Any CPU.Build.0 = Release|Any CPU
+		{249EB4F9-B578-4E20-906D-B044FA85A863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{249EB4F9-B578-4E20-906D-B044FA85A863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{249EB4F9-B578-4E20-906D-B044FA85A863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{249EB4F9-B578-4E20-906D-B044FA85A863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E7912B3-18EC-406D-9D46-5BE30C50A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E7912B3-18EC-406D-9D46-5BE30C50A0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E7912B3-18EC-406D-9D46-5BE30C50A0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E7912B3-18EC-406D-9D46-5BE30C50A0E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
