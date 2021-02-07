@@ -25,6 +25,8 @@ namespace MockSchoolManagement
         {
             services.AddControllersWithViews(a => a.EnableEndpointRouting = false).AddXmlSerializerFormatters();
             services.AddSingleton<IStudentRepository, MockStudentRepository>();
+            //services.AddScoped<IStudentRepository, MockStudentRepository>();
+            //services.AddTransient<IStudentRepository, MockStudentRepository>();
             
         }
 
