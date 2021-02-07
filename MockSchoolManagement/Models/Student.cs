@@ -11,6 +11,9 @@ namespace MockSchoolManagement.Models
         [Required(ErrorMessage = "请输入姓名，它不能为空！")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// 使用可空属性，当前台提交的值为空“请选择”时就不会出错。
+        /// </summary>
         [Display(Name = "主修科目")]
         [Required(ErrorMessage ="请选择一门科目")]
         public MajorEnum? Major { get; set; }
