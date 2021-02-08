@@ -4,7 +4,7 @@
     var photoPath = "~/images/noimage.png";
     if (Model.student.PhotoPath != null)
     {
-        photoPath = "~/images/avatars/" + (Model.student.PhotoPath ?? "noimage.png");
+        photoPath = "~/images/avatars/" + Model.student.PhotoPath;
     }
     
 }

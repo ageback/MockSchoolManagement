@@ -7,8 +7,6 @@ namespace MockSchoolManagement.ViewModels
 {
     public class StudentCreateViewModel
     {
-        //public int Id { get; set; }
-
         [Display(Name = "姓名"), MaxLength(50,ErrorMessage ="姓名的长度不能超过50个字符")]
         [Required(ErrorMessage = "请输入姓名，它不能为空！")]
         public string Name { get; set; }

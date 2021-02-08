@@ -40,7 +40,7 @@ namespace MockSchoolManagement.Controllers
         /// <returns></returns>
         public ViewResult ViewDetails(int? id)
         {
-            Student model = _studentRepository.GetStudent(id??1);
+            Student model = _studentRepository.GetStudentById(id??1);
             ViewBag.PageTitle = "学生详情";
             return View(model);
         }
@@ -53,7 +53,7 @@ namespace MockSchoolManagement.Controllers
         {
             HomeDetailsViewModel model = new HomeDetailsViewModel()
             {
-                student = _studentRepository.GetStudent(id ?? 1),
+                student = _studentRepository.GetStudentById(id ?? 1),
                 PageTitle = "学生详情"
             };
             return View(model);
@@ -116,7 +116,68 @@ namespace MockSchoolManagement.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public ViewResult Edit(int id)
+        {
+            Student student = _studentRepository.GetStudentById(id);
+            StudentEditViewModel studentEditViewModel = new StudentEditViewModel
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                Major = student.Major,
+                ExistingPhotoPath = student.PhotoPath
+            };
+            return View(studentEditViewModel);
+        }
+        [HttpPost]
+        public IActionResult Edit(StudentEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Student student = _studentRepository.GetStudentById(model.Id);
+                student.Name = model.Name;
+                student.Email = model.Email;
+                student.Major = model.Major;
+                if (model.Photos.Count > 0)
+                {
+                    if (model.ExistingPhotoPath != null)
+                    {
+                        string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "avatars", model.ExistingPhotoPath);
+                        System.IO.File.Delete(filePath);
+                    }
+                    student.PhotoPath = ProcessUploadedFile(model);
+                }
+                Student updatedStudent = _studentRepository.Update(student);
+                return RedirectToAction("index");
+            }
+            return View(model);
+        }
 
 
+        /// <summary>
+        /// 将图片保存到指定的路径中，并返回唯一的文件名
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private string ProcessUploadedFile(StudentEditViewModel model)
+        {
+            string uniqueFileName = null;
+            if (model.Photos.Count > 0)
+            {
+                foreach (var photo in model.Photos)
+                {
+                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "avatars");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    // 非托管方法，需要手工释放资源
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        photo.CopyTo(fileStream);
+                    }
+                }
+            }
+            return uniqueFileName;
+        }
     }
 }

@@ -18,13 +18,13 @@ namespace MockSchoolManagement.Controllers
 
         public IActionResult Details(int id)
         {
-            Student model = studentRepository.GetStudent(id);
+            Student model = studentRepository.GetStudentById(id);
             return View(model);
         }
 
         public JsonResult DetailsJson()
         {
-            Student model = studentRepository.GetStudent(2);
+            Student model = studentRepository.GetStudentById(2);
             return Json(model);
         }
     }
