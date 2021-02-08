@@ -4,7 +4,12 @@
 <div class="card-deck">
     @foreach(var student in Model)
     {
-        var photoPath= "~/images/" + (student.PhotoPath ?? "noimage.png");
+
+        var photoPath= "~/images/noimage.png";
+        if (student.PhotoPath != null)
+        {
+            photoPath = "~/images/avatars/" + (student.PhotoPath ?? "noimage.png");
+        }
         <div class="card m-3">
             <div class="card-header">
                 <h3 class="card-title">@student.Name</h3>

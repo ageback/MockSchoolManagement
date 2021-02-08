@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MockSchoolManagement.Models.EnumTypes;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MockSchoolManagement.ViewModels
@@ -25,6 +26,6 @@ namespace MockSchoolManagement.ViewModels
         public string Email { get; set; }
 
         [Display(Name="头像")]
-        public IFormFile Photo{ get; set; }
+        public List<IFormFile> Photos{ get; set; }
     }
 }

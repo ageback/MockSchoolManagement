@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.DataRepositories;
 using MockSchoolManagement.Models;
@@ -79,18 +80,21 @@ namespace MockSchoolManagement.Controllers
             if (ModelState.IsValid)
             {
                 string uniqueFileName = null;
-                if (model.Photo != null)
+                if (model.Photos != null && model.Photos.Count > 0)
                 {
-                    // 必须将图片文件上传到wwwroot/images中
-                    // 而要获取wwwroot文件夹的路径，需要注入WebHostEnvironment服务
-                    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                    foreach (IFormFile photo in model.Photos)
+                    {
+                        // 必须将图片文件上传到wwwroot/images中
+                        // 而要获取wwwroot文件夹的路径，需要注入WebHostEnvironment服务
+                        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "avatars");
 
-                    // 确保文件名是唯一
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                        // 确保文件名是唯一
+                        uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                    // 使用 IFormFile 接口提供的CopyTo()方法将文件复制到wwwroot/images文件夹
-                    model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                        // 使用 IFormFile 接口提供的CopyTo()方法将文件复制到wwwroot/images文件夹
+                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                    }
                 }
                 Student newStudent = new Student
                 {

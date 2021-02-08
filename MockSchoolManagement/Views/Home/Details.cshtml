@@ -1,7 +1,12 @@
 ﻿@model HomeDetailsViewModel
 @{ 
     ViewBag.Title = "学生详情";
-    var photoPath = "~/images/" + (Model.student.PhotoPath ?? "noimage.png");
+    var photoPath = "~/images/noimage.png";
+    if (Model.student.PhotoPath != null)
+    {
+        photoPath = "~/images/avatars/" + (Model.student.PhotoPath ?? "noimage.png");
+    }
+    
 }
 
 <h3>@Model.PageTitle</h3>
