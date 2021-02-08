@@ -18,7 +18,7 @@
             <img asp-append-version="true" class="card-img-top" src="@photoPath"  />
 
             <div class="card-body text-center">
-                <h5 class="card-title">主修科目：@student.Major</h5>
+                <h5 class="card-title">主修科目：@student.Major.GetDisplayName()</h5>
             </div>
             <div class="card-body text-center">
                 <h5 class="card-title">电子邮箱：@student.Email</h5>
