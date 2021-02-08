@@ -1,29 +1,29 @@
 ﻿@model IEnumerable<Student>
-
-
 @{ ViewBag.Title = "学生列表页面";}
+
 <div class="card-deck">
-    @foreach(var s in Model)
+    @foreach(var student in Model)
     {
-    <div class="card m-3">
-        <div class="card-header">
-            <h3 class="card-title">@s.Name</h3>
-        </div>
+        var photoPath= "~/images/" + (student.PhotoPath ?? "noimage.png");
+        <div class="card m-3">
+            <div class="card-header">
+                <h3 class="card-title">@student.Name</h3>
+            </div>
 
-        <img asp-append-version="true" class="card-img-top" src="~/images/noimage.png" />
+            <img asp-append-version="true" class="card-img-top" src="@photoPath"  />
 
-        <div class="card-body text-center">
-            <h5 class="card-title">主修科目：@s.Major</h5>
+            <div class="card-body text-center">
+                <h5 class="card-title">主修科目：@student.Major</h5>
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title">电子邮箱：@student.Email</h5>
+            </div>
+            <div class="card-footer text-center">
+                <a asp-controller="home" asp-action="details" asp-route-id="@student.Id" class="btn btn-primary m-1">查看</a>
+                <a href="#" class="btn btn-primary m-1">编辑</a>
+                <a href="#" class="btn btn-danger m-1">删除</a>
+            </div>
         </div>
-        <div class="card-body text-center">
-            <h5 class="card-title">电子邮箱：@s.Email</h5>
-        </div>
-        <div class="card-footer text-center">
-            <a asp-controller="home" asp-action="details" asp-route-id="@s.Id" class="btn btn-primary m-1">查看</a>
-            <a href="#" class="btn btn-primary m-1">编辑</a>
-            <a href="#" class="btn btn-danger m-1">删除</a>
-        </div>
-    </div>
     }
 </div>   
 
