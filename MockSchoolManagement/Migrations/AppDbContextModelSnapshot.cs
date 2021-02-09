@@ -26,14 +26,12 @@ namespace MockSchoolManagement.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Major")
+                    b.Property<int?>("Major")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoPath")

@@ -49,11 +49,17 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
-        public ViewResult Details(int? id)
+        public ViewResult Details(int id)
         {
+            var stu = _studentRepository.GetStudentById(id);
+            if (stu == null)
+            {
+                Response.StatusCode = 404;
+                return View("StudentNotFound", id);
+            }
             HomeDetailsViewModel model = new HomeDetailsViewModel()
             {
-                student = _studentRepository.GetStudentById(id ?? 1),
+                Student = stu,
                 PageTitle = "学生详情"
             };
             return View(model);
