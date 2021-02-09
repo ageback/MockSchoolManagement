@@ -21,6 +21,8 @@ namespace MockSchoolManagement
             Host.CreateDefaultBuilder(args)
                 .ConfigureLogging((hostingContext, logging) =>
                 {
+                    //删除所有默认记录日志提供程序
+                    logging.ClearProviders();
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                     logging.AddConsole();
                     logging.AddDebug();
