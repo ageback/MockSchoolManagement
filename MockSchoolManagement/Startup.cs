@@ -53,46 +53,17 @@ namespace MockSchoolManagement
                 app.UseExceptionHandler("/Error");
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
-            //else
-            //{
-            //    //app.UseStatusCodePagesWithRedirects("/Error/{0}");
-            //    //app.UseStatusCodePagesWithReExecute("/Error/{0}");
-            //    app.UseExceptionHandler("/Error");
-            //}
+            
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();
             //app.UseMvcWithDefaultRoute();
-            //app.Run(async (context) =>
-            //{
-            //    await context.Response.WriteAsync("Hello World!");
-            //});
-
-
-            //测试终端中间件特性(app);
-
-            //实践中间件工作流程(app, logger);
-
-
-
-            //app.Run(async (context) => {
-            //    throw new Exception("主动抛异常");
-            //    await context.Response.WriteAsync("Hello World!");
-            //});
 
             app.UseRouting();
             app.UseEndpoints(ep =>
             {
                 ep.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapGet("/", async context =>
-            //    {
-            //        await context.Response.WriteAsync("Hello World!");
-            //    });
-            //});
         }
 
         private static void 实践中间件工作流程(IApplicationBuilder app, ILogger<Startup> logger)
