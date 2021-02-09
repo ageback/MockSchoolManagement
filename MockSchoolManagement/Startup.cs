@@ -46,6 +46,14 @@ namespace MockSchoolManagement
                 };
 
                 app.UseDeveloperExceptionPage(options);
+            } 
+            //else if(env.IsStaging() || env.IsProduction()||env.IsEnvironment("UAT"))
+            //{
+            //    app.UseExceptionHandler("/Error");
+            //}
+            else
+            {
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
             }
 
             //app.UseDefaultFiles();
