@@ -8,7 +8,7 @@ namespace MockSchoolManagement.DataRepositories
 {
     public interface IStudentRepository
     {
-        Student GetStudentById(int id);
+        Student GetStudentById(int? id);
         IEnumerable<Student> GetAllStudents();
 
         Student Insert(Student student);

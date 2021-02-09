@@ -49,8 +49,9 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
-        public ViewResult Details(int id)
+        public ViewResult Details(int? id)
         {
+            throw new Exception("故意抛出异常");
             var stu = _studentRepository.GetStudentById(id);
             if (stu == null)
             {

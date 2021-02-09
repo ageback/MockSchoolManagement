@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MockSchoolManagement.Controllers
 {
-    [Route("Error/{statusCode}")]
     public class ErrorController : Controller
     {
+        [Route("Error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)
         {
             // 配合 app.UseStatusCodePagesWithReExecute("/Error/{0}") 获取url地址和参数
@@ -24,5 +24,17 @@ namespace MockSchoolManagement.Controllers
             }
             return View("NotFound");
         }
+
+        [Route("Error")]
+        public IActionResult Error()
+        {
+            var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            ViewBag.ExceptionPath = exceptionHandlerPathFeature.Path;
+            ViewBag.ExceptionMessage = exceptionHandlerPathFeature.Error.Message;
+            ViewBag.StackTrace = exceptionHandlerPathFeature.Error.StackTrace;
+            return View("Error");
     }
+    }
+
+    
 }

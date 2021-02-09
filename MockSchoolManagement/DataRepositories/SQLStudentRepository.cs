@@ -29,7 +29,7 @@ namespace MockSchoolManagement.DataRepositories
             return _context.Students;
         }
 
-        public Student GetStudentById(int id)
+        public Student GetStudentById(int? id)
         {
             return _context.Students.Find(id);
         }
