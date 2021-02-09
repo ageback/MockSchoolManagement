@@ -51,7 +51,6 @@ namespace MockSchoolManagement.Controllers
         /// <returns></returns>
         public ViewResult Details(int? id)
         {
-            throw new Exception("故意抛出异常");
             var stu = _studentRepository.GetStudentById(id);
             if (stu == null)
             {
