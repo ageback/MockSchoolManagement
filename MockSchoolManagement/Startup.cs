@@ -53,7 +53,8 @@ namespace MockSchoolManagement
             //}
             else
             {
-                app.UseStatusCodePagesWithRedirects("/Error/{0}");
+                //app.UseStatusCodePagesWithRedirects("/Error/{0}");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
 
             //app.UseDefaultFiles();
