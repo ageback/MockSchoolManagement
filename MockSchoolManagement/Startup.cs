@@ -46,17 +46,19 @@ namespace MockSchoolManagement
                 };
 
                 app.UseDeveloperExceptionPage(options);
-            } 
-            //else if(env.IsStaging() || env.IsProduction()||env.IsEnvironment("UAT"))
+            }
+            else if (env.IsStaging() || env.IsProduction() || env.IsEnvironment("UAT"))
+            {
+                // 显示用户友好的错误页面
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
+            //else
             //{
+            //    //app.UseStatusCodePagesWithRedirects("/Error/{0}");
+            //    //app.UseStatusCodePagesWithReExecute("/Error/{0}");
             //    app.UseExceptionHandler("/Error");
             //}
-            else
-            {
-                //app.UseStatusCodePagesWithRedirects("/Error/{0}");
-                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
-                app.UseExceptionHandler("/Error");
-            }
 
             //app.UseDefaultFiles();
             app.UseStaticFiles();

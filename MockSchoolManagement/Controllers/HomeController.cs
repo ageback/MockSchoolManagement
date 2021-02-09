@@ -38,12 +38,12 @@ namespace MockSchoolManagement.Controllers
         /// 使用 ViewData或ViewBag 传递数据到View
         /// </summary>
         /// <returns></returns>
-        public ViewResult ViewDetails(int? id)
-        {
-            Student model = _studentRepository.GetStudentById(id??1);
-            ViewBag.PageTitle = "学生详情";
-            return View(model);
-        }
+        //public ViewResult ViewDetails(int? id)
+        //{
+        //    Student model = _studentRepository.GetStudentById(id??1);
+        //    ViewBag.PageTitle = "学生详情";
+        //    return View(model);
+        //}
 
         /// <summary>
         /// 在视图中使用 ViewModel
@@ -65,10 +65,10 @@ namespace MockSchoolManagement.Controllers
             return View(model);
         }
 
-        public string MoDetails(int? id, string name)
-        {
-            return "id = " + id.Value.ToString() + " 并且 名字 = " + name;
-        }
+        //public string MoDetails(int? id, string name)
+        //{
+        //    return "id = " + id.Value.ToString() + " 并且 名字 = " + name;
+        //}
 
         public ViewResult Index()
         {
@@ -126,6 +126,11 @@ namespace MockSchoolManagement.Controllers
         public ViewResult Edit(int id)
         {
             Student student = _studentRepository.GetStudentById(id);
+            if (student == null)
+            {
+                Response.StatusCode = 404;
+                return View("StudentNotFound", id);
+            }
             StudentEditViewModel studentEditViewModel = new StudentEditViewModel
             {
                 Id = student.Id,
