@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.ViewModels;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MockSchoolManagement.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private UserManager<IdentityUser> _userManager;

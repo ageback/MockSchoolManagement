@@ -13,7 +13,6 @@ using MockSchoolManagement.ViewModels;
 
 namespace MockSchoolManagement.Controllers
 {
-    [Authorize] 
     public class HomeController : Controller
     {
         private readonly IStudentRepository _studentRepository;
@@ -50,7 +49,6 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
-        [AllowAnonymous]
         public ViewResult Details(int? id)
         {
             var stu = _studentRepository.GetStudentById(id);
