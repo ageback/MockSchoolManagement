@@ -3,7 +3,7 @@
   "defaultProvider": "cdnjs", //默认从哪个CDN网络下载文件
   "libraries": [
     {
-      "library": "twitter-bootstrap@4.3.1", //要下载的前端包名称
+      "library": "twitter-bootstrap@4.6.0", //要下载的前端包名称
       "destination": "wwwroot/lib/twitter-bootstrap/" //存放库的文件路径地址
     },
     {
