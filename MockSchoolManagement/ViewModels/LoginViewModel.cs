@@ -9,7 +9,7 @@ namespace MockSchoolManagement.ViewModels
     public class LoginViewModel
     {
         [Required(ErrorMessage = "请输入邮箱地址，它不能为空！")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage ="请输入正确的邮箱地址。")]
         [Display(Name ="邮箱地址")]
         public string Email { get; set; }
 

@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\lib\twitter-bootstrap\js\" />
   </ItemGroup>
 
 </Project>
