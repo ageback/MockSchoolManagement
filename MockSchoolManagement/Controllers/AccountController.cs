@@ -34,7 +34,10 @@ namespace MockSchoolManagement.Controllers
                 {
                     if(!string.IsNullOrEmpty(returnUrl))
                     {
-                        return Redirect(returnUrl);
+                        if (Url.IsLocalUrl(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
                     }
                     else
                     {
