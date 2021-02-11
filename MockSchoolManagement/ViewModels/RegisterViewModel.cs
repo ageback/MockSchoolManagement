@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace MockSchoolManagement.ViewModels
         [EmailAddress]
         [Display(Name ="邮箱地址")]
         [Required(ErrorMessage = "请输入邮箱地址，它不能为空！")]
+        [Remote(action:"IsEmailInUse",controller:"Account")]
         public string Email { get; set; }
 
         [Required(ErrorMessage ="请输入密码")]

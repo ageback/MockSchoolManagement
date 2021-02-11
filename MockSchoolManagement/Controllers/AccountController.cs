@@ -80,5 +80,20 @@ namespace MockSchoolManagement.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("index", "home"); 
         }
+
+        [AcceptVerbs("Get","Post")]
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"邮箱：{email} 已经被注册过了。");
+            }
+        }
     }
 }
