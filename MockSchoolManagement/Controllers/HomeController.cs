@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ using MockSchoolManagement.ViewModels;
 
 namespace MockSchoolManagement.Controllers
 {
-    
+    [Authorize] 
     public class HomeController : Controller
     {
         private readonly IStudentRepository _studentRepository;
@@ -49,6 +50,7 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         public ViewResult Details(int? id)
         {
             var stu = _studentRepository.GetStudentById(id);

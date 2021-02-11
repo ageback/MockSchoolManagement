@@ -72,6 +72,7 @@ namespace MockSchoolManagement
             //app.UseMvcWithDefaultRoute();
             app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
             app.UseEndpoints(ep =>
             {
                 ep.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
