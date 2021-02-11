@@ -8,9 +8,9 @@ namespace MockSchoolManagement.ViewModels
 {
     public class RegisterViewModel
     {
-        [Required]
         [EmailAddress]
         [Display(Name ="邮箱地址")]
+        [Required(ErrorMessage = "请输入邮箱地址，它不能为空！")]
         public string Email { get; set; }
 
         [Required(ErrorMessage ="请输入密码")]
