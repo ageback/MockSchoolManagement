@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MockSchoolManagement.CustomerMiddlewares.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +14,7 @@ namespace MockSchoolManagement.ViewModels
         [Display(Name ="邮箱地址")]
         [Required(ErrorMessage = "请输入邮箱地址，它不能为空！")]
         [Remote(action:"IsEmailInUse",controller:"Account")]
+        [ValidEmailDomain(allowedDomail:"52abp.com",ErrorMessage ="邮箱的域名必须是52abp.com")]
         public string Email { get; set; }
 
         [Required(ErrorMessage ="请输入密码")]
