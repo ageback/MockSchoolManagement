@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using MockSchoolManagement.CustomerMiddlewares;
 using MockSchoolManagement.DataRepositories;
 using MockSchoolManagement.Infrastructure;
+using MockSchoolManagement.Models;
 
 namespace MockSchoolManagement
 {
@@ -40,7 +41,7 @@ namespace MockSchoolManagement
                 options.Password.RequireLowercase = false;
                 options.Password.RequireDigit = false;
             });
-            services.AddIdentity<IdentityUser, IdentityRole>().AddErrorDescriber<CustomIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddErrorDescriber<CustomIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbContext>();
             //services.AddControllersWithViews(a => a.EnableEndpointRouting = false).AddXmlSerializerFormatters();
             services.AddScoped<IStudentRepository, SQLStudentRepository>();
             services.AddControllersWithViews(config =>
