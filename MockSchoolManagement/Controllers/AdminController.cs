@@ -33,5 +33,8 @@ namespace MockSchoolManagement.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult ListRoles() => View(_roleManager.Roles);
     }
 }
