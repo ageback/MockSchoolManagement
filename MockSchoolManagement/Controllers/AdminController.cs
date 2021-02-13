@@ -96,5 +96,74 @@ namespace MockSchoolManagement.Controllers
                 return View(model);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUsersInRole(string roleId)
+        {
+            ViewBag.RoleId = roleId;
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"角色 Id={roleId} 的信息不存在，请重试。";
+                return View("NotFound");
+            }
+            var model = new List<UserRoleViewModel>();
+            var users = _userManager.Users.ToList();
+            foreach(var user in users)
+            {
+                var userRoleViewModel = new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName
+                };
+                userRoleViewModel.IsSelected = await _userManager.IsInRoleAsync(user, role.Name);
+                model.Add(userRoleViewModel);
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string roleId)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"角色 Id={roleId} 的信息不存在，请重试。";
+                return View("NotFound");
+            }
+
+            for (int i = 0; i < model.Count; i++)
+            {
+                var user = await _userManager.FindByIdAsync(model[i].UserId);
+                IdentityResult result = null;
+                // 添加选中的用户到角色中
+                if (model[i].IsSelected && !(await _userManager.IsInRoleAsync(user, role.Name)))
+                {
+                    result = await _userManager.AddToRoleAsync(user, role.Name);
+                }
+                // 从角色中移除未选中的用户
+                else if (!model[i].IsSelected && await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (result.Succeeded)
+                {
+                    if (i < model.Count - 1)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return RedirectToAction("EditRole", new { Id = roleId });
+                    }
+                }
+            }
+            return RedirectToAction("EditRole", new { Id = roleId });
+        }
     }
 }
