@@ -25,7 +25,7 @@ namespace MockSchoolManagement.Controllers
                 IdentityRole identityRole = new IdentityRole { Name = model.RoleName };
                 IdentityResult result = await _roleManager.CreateAsync(identityRole);
                 if (result.Succeeded)
-                    return RedirectToAction("index", "home");
+                    return RedirectToAction("ListRoles", "Admin");
 
                 foreach (IdentityError err in result.Errors)
                     ModelState.AddModelError("", err.Description);
