@@ -97,5 +97,8 @@ namespace MockSchoolManagement.Controllers
                 return Json($"邮箱：{email} 已经被注册过了。");
             }
         }
-    }
+
+        [HttpGet]
+        public IActionResult AccessDenied() => View();
+   }
 }

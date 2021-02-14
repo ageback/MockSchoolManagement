@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.ViewModels;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MockSchoolManagement.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -165,5 +167,6 @@ namespace MockSchoolManagement.Controllers
             }
             return RedirectToAction("EditRole", new { Id = roleId });
         }
+
     }
 }

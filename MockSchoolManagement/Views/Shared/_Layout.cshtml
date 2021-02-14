@@ -32,6 +32,12 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="home" asp-action="create">添加学生</a>
                     </li>
+                    @if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Admin" asp-action="ListRoles">管理</a>
+                        </li>
+                    }
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     @if (_signInManager.IsSignedIn(User)) { 
