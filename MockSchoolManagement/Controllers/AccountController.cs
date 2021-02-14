@@ -68,6 +68,11 @@ namespace MockSchoolManagement.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    // 如果用户已登录且为Admin角色，那么就是Admin正在创建新用户，所以重定向Admin用户到ListUsers视图。
+                    if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Admin");
+                    }
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("index", "home");
                 }
