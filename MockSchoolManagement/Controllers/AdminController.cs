@@ -168,5 +168,9 @@ namespace MockSchoolManagement.Controllers
             return RedirectToAction("EditRole", new { Id = roleId });
         }
 
+        #region 用户管理
+        [HttpGet]
+        public IActionResult ListUsers() => View(_userManager.Users.ToList());
+        #endregion
     }
 }
