@@ -54,8 +54,8 @@ namespace MockSchoolManagement.Controllers
             var stu = _studentRepository.GetStudentById(id);
             if (stu == null)
             {
-                Response.StatusCode = 404;
-                return View("StudentNotFound", id);
+                ViewBag.ErrorMessage = $"学生Id={id}的信息不存在，请重试。";
+                return View("NotFound", id);
             }
             HomeDetailsViewModel model = new HomeDetailsViewModel()
             {
@@ -128,8 +128,8 @@ namespace MockSchoolManagement.Controllers
             Student student = _studentRepository.GetStudentById(id);
             if (student == null)
             {
-                Response.StatusCode = 404;
-                return View("StudentNotFound", id);
+                ViewBag.ErrorMessage = $"学生Id={id}的信息不存在，请重试。";
+                return View("NotFound", id);
             }
             StudentEditViewModel studentEditViewModel = new StudentEditViewModel
             {
