@@ -36,7 +36,7 @@ namespace MockSchoolManagement
                 options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role"));
                 options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
                 options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole("Admin", "User", "SuperManager"));
-                options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role"));
+                options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context => AuthorizeAccess(context)));
             });
             // 使用 sqlserver 数据库，通过IConfiguration访问去获取，自定义名称的MockStudentDBConnection作为连接字符串
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("MockStudentDBConnection")));
@@ -96,6 +96,18 @@ namespace MockSchoolManagement
             });
         }
 
+        /// <summary>
+        /// 自定义授权策略委托方法
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private bool AuthorizeAccess(AuthorizationHandlerContext context)
+        {
+            var contextUser = context.User;
+            return contextUser.IsInRole("Admin") &&
+                contextUser.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") ||
+                contextUser.IsInRole("Super Admin");
+        }
         private static void 实践中间件工作流程(IApplicationBuilder app, ILogger<Startup> logger)
         {
             app.Use(async (context, next) =>
