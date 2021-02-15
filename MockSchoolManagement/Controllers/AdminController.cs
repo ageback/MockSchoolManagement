@@ -402,5 +402,7 @@ namespace MockSchoolManagement.Controllers
             return RedirectToAction("EditUser", new { Id = model.UserId });
         }
         #endregion
+        [HttpGet]
+        public IActionResult AccessDenied() => View();
     }
 }

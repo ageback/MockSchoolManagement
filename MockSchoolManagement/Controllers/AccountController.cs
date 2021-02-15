@@ -103,7 +103,5 @@ namespace MockSchoolManagement.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult AccessDenied() => View();
    }
 }
