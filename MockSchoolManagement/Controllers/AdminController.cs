@@ -26,7 +26,7 @@ namespace MockSchoolManagement.Controllers
             _userManager = userManager;
             _logger = logger;
         }
-
+        #region 角色管理
         [HttpGet]
         public IActionResult CreateRole() => View();
 
@@ -205,6 +205,7 @@ namespace MockSchoolManagement.Controllers
                 }
             }
         }
+        #endregion
 
         #region 用户管理
         [HttpGet]
@@ -285,6 +286,60 @@ namespace MockSchoolManagement.Controllers
                 }
                 return View("ListUsers");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageUserRoles(string userId)
+        {
+            ViewBag.UserId = userId;
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"无法找到ID为{userId}的用户";
+                return View("NotFound");
+            }
+
+            var model = new List<RolesInUserViewModel>();
+
+            foreach (var role in await _roleManager.Roles.ToListAsync())
+            {
+                var rolesInUserViewModel = new RolesInUserViewModel()
+                {
+                    RoleId = role.Id,
+                    RoleName = role.Name
+                };
+                rolesInUserViewModel.IsSelected = await _userManager.IsInRoleAsync(user, role.Name);
+                model.Add(rolesInUserViewModel);
+            }
+            return View(model); 
+        }
+        [HttpPost]
+        public async Task<IActionResult> ManageUserRoles(List<RolesInUserViewModel> model, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"无法找到ID为{userId}的用户";
+                return View("NotFound");
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "无法删除用户中的现有角色");
+                return View(model);
+            }
+
+            result = await _userManager.AddToRolesAsync(user, model.Where(x => x.IsSelected).Select(y => y.RoleName));
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "无法向用户添加待定的角色");
+                return View(model);
+            }
+            return RedirectToAction("EditUser", new { Id = userId });
         }
         #endregion
     }
