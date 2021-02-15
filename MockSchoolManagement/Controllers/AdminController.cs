@@ -168,6 +168,30 @@ namespace MockSchoolManagement.Controllers
             return RedirectToAction("EditRole", new { Id = roleId });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"无法找到ID为{id}的角色信息";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await _roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles");
+                }
+                foreach(var err in result.Errors)
+                {
+                    ModelState.AddModelError("", err.Description);
+                }
+                return View("ListRoles");
+            }
+        }
+
         #region 用户管理
         [HttpGet]
         public IActionResult ListUsers() => View(_userManager.Users.ToList());
