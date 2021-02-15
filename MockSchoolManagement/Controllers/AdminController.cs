@@ -231,7 +231,7 @@ namespace MockSchoolManagement.Controllers
                 Email = user.Email,
                 UserName = user.UserName,
                 City = user.City,
-                Claims = userClaims.Select(c => c.Value).ToList(),
+                Claims = userClaims,
                 Roles = userRoles
             };
             return View(model);
@@ -368,7 +368,7 @@ namespace MockSchoolManagement.Controllers
                 };
                 if (existingUserClaims.Any(c => c.Type == claim.Type))
                 {
-                    userClaim.IsSelected = true;
+                    userClaim.IsSelected = Boolean.Parse(existingUserClaims.Where(c => c.Type == claim.Type).FirstOrDefault().Value) ;
                 }
                 model.Claims.Add(userClaim);
             }
@@ -393,7 +393,8 @@ namespace MockSchoolManagement.Controllers
                 return View(model);
             }
 
-            result = await _userManager.AddClaimsAsync(user, model.Claims.Where(c => c.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
+            //result = await _userManager.AddClaimsAsync(user, model.Claims.Where(c => c.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
+            result = await _userManager.AddClaimsAsync(user, model.Claims.Select(c => new Claim(c.ClaimType, c.IsSelected ? "true" : "false")));
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "无法向用户添加选定的声明");
