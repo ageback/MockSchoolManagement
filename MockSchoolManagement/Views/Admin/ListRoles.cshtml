@@ -15,9 +15,13 @@
             <div class="card-body">
                 <h5 class="card-title">@role.Name</h5>
             </div>
+            @inject IAuthorizationService authorizationService;
             <div class="card-footer">
                 <form method="post" asp-action="DeleteRole" asp-route-id="@role.Id">
-                    <a asp-controller="Admin" asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-primary">编辑</a>
+                    @if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+                    {
+                        <a asp-controller="Admin" asp-action="EditRole" asp-route-id="@role.Id" class="btn btn-primary">编辑</a>
+                    }
                     <span id="confirmDeleteSpan_@role.Id" style="display:none">
                         <span>你确定要删除吗？</span>
                         <button type="submit" class="btn btn-danger">是</button>
