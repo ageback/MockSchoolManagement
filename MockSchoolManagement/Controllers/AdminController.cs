@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.ViewModels;
 using System;
@@ -15,11 +17,14 @@ namespace MockSchoolManagement.Controllers
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, 
+            ILogger<AdminController> logger)
         {
             _roleManager = roleManager; 
-            _userManager = userManager; 
+            _userManager = userManager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -179,16 +184,25 @@ namespace MockSchoolManagement.Controllers
             }
             else
             {
-                var result = await _roleManager.DeleteAsync(role);
-                if (result.Succeeded)
+                try
                 {
-                    return RedirectToAction("ListRoles");
-                }
-                foreach(var err in result.Errors)
+                    var result = await _roleManager.DeleteAsync(role);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ListRoles");
+                    }
+                    foreach (var err in result.Errors)
+                    {
+                        ModelState.AddModelError("", err.Description);
+                    }
+                    return View("ListRoles");
+                }catch(DbUpdateException err)
                 {
-                    ModelState.AddModelError("", err.Description);
+                    _logger.LogError($"发生异常：{err}");
+                    ViewBag.ErrorTitle = $"角色：【{role.Name}】 正在被使用中...";
+                    ViewBag.ErrorMessage = $"无法删除【 {role.Name}】 角色，因为此角色中已经存在用户。如果您想删除此角色，需要删除该角色中的所有用户，然后尝试删除该角色。";
+                    return View("Error");
                 }
-                return View("ListRoles");
             }
         }
 
