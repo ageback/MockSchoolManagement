@@ -31,6 +31,11 @@ namespace MockSchoolManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication().AddMicrosoftAccount(msOptions =>
+            {
+                msOptions.ClientId = _configuration["Authentication:Microsoft:ClientId"];
+                msOptions.ClientSecret = _configuration["Authentication:Microsoft:ClientSecret"];
+            });
             services.AddHttpContextAccessor();
             services.ConfigureApplicationCookie(options => options.AccessDeniedPath = new PathString("/Admin/AccessDenied"));
             // 策略结合声明授权

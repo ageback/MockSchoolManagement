@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,5 +21,15 @@ namespace MockSchoolManagement.ViewModels
 
         [Display(Name ="记住我")]
         public bool RememberMe { get; set; }
+
+        /// <summary>
+        /// 第三方登录后重定向到该URL
+        /// </summary>
+        public string ReturnUrl { get; set; }
+
+        /// <summary>
+        /// 启用第三方登录列表
+        /// </summary>
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
     }
 }
