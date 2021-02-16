@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.ViewModels;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,7 +17,7 @@ namespace MockSchoolManagement.Controllers
         private SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<AdminController> _logger;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,ILogger<AdminController> logger)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AdminController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -52,7 +50,7 @@ namespace MockSchoolManagement.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    if(!string.IsNullOrEmpty(returnUrl))
+                    if (!string.IsNullOrEmpty(returnUrl))
                     {
                         if (Url.IsLocalUrl(returnUrl))
                         {
@@ -70,7 +68,7 @@ namespace MockSchoolManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult ExternalLogin(string provider,string returnUrl)
+        public IActionResult ExternalLogin(string provider, string returnUrl)
         {
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -103,10 +101,10 @@ namespace MockSchoolManagement.Controllers
             if (email != null)
             {
                 user = await _userManager.FindByEmailAsync(email);
-                if(user!=null && !user.EmailConfirmed)
+                if (user != null && !user.EmailConfirmed)
                 {
                     ModelState.AddModelError(string.Empty, "电子邮箱未验证");
-                    return View("Login", model); 
+                    return View("Login", model);
                 }
             }
 
@@ -170,7 +168,7 @@ namespace MockSchoolManagement.Controllers
                     // 用日志记录生成的链接
                     _logger.Log(LogLevel.Warning, confirmationLink);
                     // 如果用户已登录且为Admin角色，那么就是Admin正在创建新用户，所以重定向Admin用户到ListUsers视图。
-                    if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Admin");
                     }
@@ -189,10 +187,10 @@ namespace MockSchoolManagement.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("index", "home"); 
+            return RedirectToAction("index", "home");
         }
 
-        [AcceptVerbs("Get","Post")]
+        [AcceptVerbs("Get", "Post")]
         [AllowAnonymous]
         public async Task<IActionResult> IsEmailInUse(string email)
         {
@@ -208,7 +206,7 @@ namespace MockSchoolManagement.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(string userId,string token)
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (userId == null || token == null)
             {
@@ -228,5 +226,31 @@ namespace MockSchoolManagement.Controllers
             ViewBag.ErrorMessage = "您的电子邮箱还未验证";
             return View("Error");
         }
-   }
+
+        [HttpGet]
+        public IActionResult ActivateUserEmail() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> ActivateUserEmail(EmailAddressViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+                        // 用日志记录生成的链接
+                        _logger.Log(LogLevel.Warning, confirmationLink);
+                        ViewBag.Message = "如果您在我们系统有注册账号，我们已经发了邮件到您的邮箱中，请前往邮箱激活您的账号。";
+                        return View("ActivateUserEmailConfirmation", ViewBag.Message);
+                    }
+                }
+            }
+            ViewBag.Message = "请确认邮箱是否存在异常，现在我们无法给您发送激活链接。";
+            return View("ActivateUserEmailConfirmation", ViewBag.Message);
+        }
+    }
 }
