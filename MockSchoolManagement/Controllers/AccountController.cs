@@ -129,6 +129,12 @@ namespace MockSchoolManagement.Controllers
                         };
                         // 创建没有密码的新用户
                         await _userManager.CreateAsync(user);
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, toke = token }, Request.Scheme);
+                        _logger.Log(LogLevel.Warning, confirmationLink);
+                        ViewBag.ErrorTitle = "注册成功";
+                        ViewBag.ErrorMessage = "在您登入系统前，我们已经给您发了一封邮件，需要您先进行邮箱验证。单击确认链接即可完成。";
+                        return View("Error");
                     }
                     //在AspNetUserLogins表中添加一行用户数据，然后将当前用户登录到系统中
                     await _userManager.AddLoginAsync(user, info);
@@ -169,7 +175,7 @@ namespace MockSchoolManagement.Controllers
                         return RedirectToAction("ListUsers", "Admin");
                     }
                     ViewBag.ErrorTitle = "注册成功";
-                    ViewBag.ErrorMessage = $"在您登入系统前，我们已经给您发了一封邮件，需要您先进行邮箱验证。单击确认链接即可完成。";
+                    ViewBag.ErrorMessage = "在您登入系统前，我们已经给您发了一封邮件，需要您先进行邮箱验证。单击确认链接即可完成。";
                     return View("Error");
                     //await _signInManager.SignInAsync(user, isPersistent: false);
                     //return RedirectToAction("index", "home");
