@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.ViewModels;
 using System;
@@ -16,11 +17,13 @@ namespace MockSchoolManagement.Controllers
     {
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<AdminController> _logger;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,ILogger<AdminController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -156,13 +159,20 @@ namespace MockSchoolManagement.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+                    // 用日志记录生成的链接
+                    _logger.Log(LogLevel.Warning, confirmationLink);
                     // 如果用户已登录且为Admin角色，那么就是Admin正在创建新用户，所以重定向Admin用户到ListUsers视图。
                     if(_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Admin");
                     }
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "home");
+                    ViewBag.Title = "注册成功";
+                    ViewBag.ErrorMessage = $"在您登入系统前，我们已经给您发了一封邮件，需要您先进行邮箱验证。单击确认链接即可完成。";
+                    return View("Error");
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    //return RedirectToAction("index", "home");
                 }
                 foreach (var err in result.Errors) ModelState.AddModelError(string.Empty, err.Description);
             }
@@ -191,5 +201,26 @@ namespace MockSchoolManagement.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId,string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("index", "home");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"当前 {userId} 无效";
+                return View("NotFound");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View();
+            }
+            ViewBag.ErrorMessage = "您的电子邮箱还未验证";
+            return View("Error");
+        }
    }
 }
