@@ -35,6 +35,9 @@ namespace MockSchoolManagement
             {
                 msOptions.ClientId = _configuration["Authentication:Microsoft:ClientId"];
                 msOptions.ClientSecret = _configuration["Authentication:Microsoft:ClientSecret"];
+            }).AddGitHub(options=> { 
+                options.ClientId=_configuration["Authentication:GitHub:ClientId"];
+                options.ClientSecret=_configuration["Authentication:GitHub:ClientSecret"]; 
             });
             services.AddHttpContextAccessor();
             services.ConfigureApplicationCookie(options => options.AccessDeniedPath = new PathString("/Admin/AccessDenied"));
