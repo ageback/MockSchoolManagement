@@ -95,6 +95,18 @@ namespace MockSchoolManagement.Controllers
                 return View("Login", model);
             }
 
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            ApplicationUser user = null;
+            if (email != null)
+            {
+                user = await _userManager.FindByEmailAsync(email);
+                if(user!=null && !user.EmailConfirmed)
+                {
+                    ModelState.AddModelError(string.Empty, "电子邮箱未验证");
+                    return View("Login", model); 
+                }
+            }
+
             // 使用已经登录过的信息
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: false);
             if (signInResult.Succeeded)
@@ -103,10 +115,8 @@ namespace MockSchoolManagement.Controllers
             }
             else
             {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
                 if (email != null)
                 {
-                    var user = await _userManager.FindByEmailAsync(email);
                     if (user == null)
                     {
                         user = new ApplicationUser
