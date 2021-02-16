@@ -168,7 +168,7 @@ namespace MockSchoolManagement.Controllers
                     {
                         return RedirectToAction("ListUsers", "Admin");
                     }
-                    ViewBag.Title = "注册成功";
+                    ViewBag.ErrorTitle = "注册成功";
                     ViewBag.ErrorMessage = $"在您登入系统前，我们已经给您发了一封邮件，需要您先进行邮箱验证。单击确认链接即可完成。";
                     return View("Error");
                     //await _signInManager.SignInAsync(user, isPersistent: false);
