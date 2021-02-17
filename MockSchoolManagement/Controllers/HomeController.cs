@@ -151,7 +151,7 @@ namespace MockSchoolManagement.Controllers
                 student.Email = model.Email;
                 student.Major = model.Major;
                 student.EnrollmentDate = model.EnrollmentDate;
-                if (model.Photos.Count > 0 && model.Photos != null)
+                if (model.Photos != null && model.Photos.Count > 0)
                 {
                     if (model.ExistingPhotoPath != null)
                     {
