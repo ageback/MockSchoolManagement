@@ -1,4 +1,5 @@
 ﻿using MockSchoolManagement.Models.EnumTypes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MockSchoolManagement.Models
 {
@@ -16,5 +17,8 @@ namespace MockSchoolManagement.Models
         public string Email { get; set; }
 
         public string PhotoPath { get; set; }
+
+        [NotMapped]
+        public string EncryptedId { get; set; }
     }
 }

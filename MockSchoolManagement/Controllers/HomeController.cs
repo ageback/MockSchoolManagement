@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.DataRepositories;
 using MockSchoolManagement.Models;
+using MockSchoolManagement.Security;
 using MockSchoolManagement.ViewModels;
 
 namespace MockSchoolManagement.Controllers
@@ -17,11 +19,15 @@ namespace MockSchoolManagement.Controllers
     {
         private readonly IStudentRepository _studentRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IDataProtector _protector;
 
-        public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment)
+        public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurposeStrings dataProtectionPurposeStrings)
         {
             _studentRepository = studentRepository;
             _webHostEnvironment = webHostEnvironment;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
+
         }
 
        
@@ -49,9 +55,9 @@ namespace MockSchoolManagement.Controllers
         /// 在视图中使用 ViewModel
         /// </summary>
         /// <returns></returns>
-        public ViewResult Details(int? id)
+        public ViewResult Details(string id)
         {
-            var stu = _studentRepository.GetStudentById(id);
+            var stu = _studentRepository.GetStudentById(Convert.ToInt32(_protector.Unprotect(id)));
             if (stu == null)
             {
                 ViewBag.ErrorMessage = $"学生Id={id}的信息不存在，请重试。";
@@ -72,7 +78,12 @@ namespace MockSchoolManagement.Controllers
 
         public ViewResult Index()
         {
-            var model = _studentRepository.GetAllStudents();
+            List<Student> model = _studentRepository.GetAllStudents().Select(s =>
+            {
+                s.EncryptedId = _protector.Protect(s.Id.ToString());
+                return s;
+            }).ToList();
+            
             return View(model);
         }
 
@@ -123,9 +134,9 @@ namespace MockSchoolManagement.Controllers
             return View();
         }
         [HttpGet]
-        public ViewResult Edit(int id)
+        public ViewResult Edit(string id)
         {
-            Student student = _studentRepository.GetStudentById(id);
+            Student student = _studentRepository.GetStudentById(Convert.ToInt32(_protector.Unprotect(id)));
             if (student == null)
             {
                 ViewBag.ErrorMessage = $"学生Id={id}的信息不存在，请重试。";
