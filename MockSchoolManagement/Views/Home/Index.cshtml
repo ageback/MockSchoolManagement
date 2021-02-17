@@ -32,7 +32,7 @@
                     <td>@student.Major.GetDisplayName()</td>
                     <td>@student.EnrollmentDate.ToString("yyyy-MM-dd")</td>
                     <td>
-                        <form method="post" asp-action="DeleteUser" asp-route-id="@student.Id">
+                        <form method="post" asp-action="DeleteStudent" asp-route-id="@student.Id">
 
                             <a asp-controller="home" asp-action="details" asp-route-id="@student.EncryptedId" class="btn btn-info">查看</a>
                             <a asp-controller="home" asp-action="edit" asp-route-id="@student.EncryptedId" class="btn btn-primary m-1">编辑</a>
@@ -50,6 +50,10 @@
         </tbody>
     </table>
 </div>   
+
+@section Scripts{
+    <script src="~/js/CustomScript.js"></script>
+}
 
 <script>
     let a = 6;

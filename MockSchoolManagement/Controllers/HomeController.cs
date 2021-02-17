@@ -98,23 +98,7 @@ namespace MockSchoolManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = null;
-                if (model.Photos != null && model.Photos.Count > 0)
-                {
-                    foreach (IFormFile photo in model.Photos)
-                    {
-                        // 必须将图片文件上传到wwwroot/images中
-                        // 而要获取wwwroot文件夹的路径，需要注入WebHostEnvironment服务
-                        string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "avatars");
-
-                        // 确保文件名是唯一
-                        uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        // 使用 IFormFile 接口提供的CopyTo()方法将文件复制到wwwroot/images文件夹
-                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
-                    }
-                }
+                string uniqueFileName = ProcessUploadedFile(model);
                 Student newStudent = new Student
                 {
                     Name = model.Name,
@@ -148,11 +132,12 @@ namespace MockSchoolManagement.Controllers
             }
             StudentEditViewModel studentEditViewModel = new StudentEditViewModel
             {
-                Id = student.Id,
+                Id = id,
                 Name = student.Name,
                 Email = student.Email,
                 Major = student.Major,
-                ExistingPhotoPath = student.PhotoPath
+                ExistingPhotoPath = student.PhotoPath,
+                EnrollmentDate=student.EnrollmentDate
             };
             return View(studentEditViewModel);
         }
@@ -161,16 +146,20 @@ namespace MockSchoolManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                Student student = DecryptedStudent(model.Id.ToString());
+                Student student = DecryptedStudent(model.Id);
                 student.Name = model.Name;
                 student.Email = model.Email;
                 student.Major = model.Major;
-                if (model.Photos.Count > 0)
+                student.EnrollmentDate = model.EnrollmentDate;
+                if (model.Photos.Count > 0 && model.Photos != null)
                 {
                     if (model.ExistingPhotoPath != null)
                     {
                         string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "avatars", model.ExistingPhotoPath);
-                        System.IO.File.Delete(filePath);
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
                     }
                     student.PhotoPath = ProcessUploadedFile(model);
                 }
@@ -180,13 +169,26 @@ namespace MockSchoolManagement.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            var student = await _studentRepository.FirstOrDefaultAsync(a => a.Id == id);
+            if (student == null)
+            {
+                ViewBag.ErrorMessage = $"无法找到ID为{id}的学生信息。";
+                return View("NotFound");
+            }
+            await _studentRepository.DeleteAsync(a => a.Id == id);
+            return RedirectToAction("index");
+        }
+
 
         /// <summary>
         /// 将图片保存到指定的路径中，并返回唯一的文件名
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        private string ProcessUploadedFile(StudentEditViewModel model)
+        private string ProcessUploadedFile(StudentCreateViewModel model)
         {
             string uniqueFileName = null;
             if (model.Photos.Count > 0)
