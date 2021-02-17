@@ -41,8 +41,9 @@
                                 <button type="submit" class="btn btn-danger">是</button>
                                 <a href="#" class="btn btn-primary" onclick="confirmDelete('@student.Id',false)">否</a>
                             </span>
-                            <span id="deleteSpan_@student.Id"></span>
-                            <a href="#" class="btn btn-danger" onclick="confirmDelete('@student.Id',true)">删除</a>
+                            <span id="deleteSpan_@student.Id">
+                                <a href="#" class="btn btn-danger" onclick="confirmDelete('@student.Id',true)">删除</a>
+                            </span>
                         </form> 
                     </td>
                 </tr>
