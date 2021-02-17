@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.DataRepositories;
+using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.Security;
 using MockSchoolManagement.ViewModels;
@@ -17,11 +18,11 @@ namespace MockSchoolManagement.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IStudentRepository _studentRepository;
+        private readonly IRepository<Student,int> _studentRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IDataProtector _protector;
 
-        public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider,
+        public HomeController(IRepository<Student,int> studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurposeStrings dataProtectionPurposeStrings)
         {
             _studentRepository = studentRepository;
@@ -57,7 +58,7 @@ namespace MockSchoolManagement.Controllers
         /// <returns></returns>
         public ViewResult Details(string id)
         {
-            var stu = _studentRepository.GetStudentById(Convert.ToInt32(_protector.Unprotect(id)));
+            var stu = DecryptedStudent(id);
             if (stu == null)
             {
                 ViewBag.ErrorMessage = $"学生Id={id}的信息不存在，请重试。";
@@ -71,14 +72,14 @@ namespace MockSchoolManagement.Controllers
             return View(model);
         }
 
-        //public string MoDetails(int? id, string name)
-        //{
-        //    return "id = " + id.Value.ToString() + " 并且 名字 = " + name;
-        //}
+        private Student DecryptedStudent(string id)
+        {
+            return _studentRepository.FirstOrDefault(s => s.Id == Convert.ToInt32(_protector.Unprotect(id)));
+        }
 
         public ViewResult Index()
         {
-            List<Student> model = _studentRepository.GetAllStudents().Select(s =>
+            List<Student> model = _studentRepository.GetAllList().Select(s =>
             {
                 s.EncryptedId = _protector.Protect(s.Id.ToString());
                 return s;
@@ -136,7 +137,7 @@ namespace MockSchoolManagement.Controllers
         [HttpGet]
         public ViewResult Edit(string id)
         {
-            Student student = _studentRepository.GetStudentById(Convert.ToInt32(_protector.Unprotect(id)));
+            Student student = DecryptedStudent(id);
             if (student == null)
             {
                 ViewBag.ErrorMessage = $"学生Id={id}的信息不存在，请重试。";
@@ -157,7 +158,7 @@ namespace MockSchoolManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                Student student = _studentRepository.GetStudentById(model.Id);
+                Student student = DecryptedStudent(model.Id.ToString());
                 student.Name = model.Name;
                 student.Email = model.Email;
                 student.Major = model.Major;
