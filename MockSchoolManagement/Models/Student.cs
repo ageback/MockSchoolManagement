@@ -1,4 +1,7 @@
 ﻿using MockSchoolManagement.Models.EnumTypes;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MockSchoolManagement.Models
@@ -20,5 +23,12 @@ namespace MockSchoolManagement.Models
 
         [NotMapped]
         public string EncryptedId { get; set; }
+
+        /// <summary>
+        /// 入学时间
+        /// </summary>
+        public DateTime EnrollmentDate { get; set; }
+
+        public ICollection<StudentCourse> StudentCourses { get; set; }
     }
 }
