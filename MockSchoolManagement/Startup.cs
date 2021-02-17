@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using MockSchoolManagement.CustomerMiddlewares;
 using MockSchoolManagement.DataRepositories;
 using MockSchoolManagement.Infrastructure;
+using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.Security;
 using MockSchoolManagement.Security.CustomTokenProvider;
@@ -85,6 +86,7 @@ namespace MockSchoolManagement
             //services.AddControllersWithViews(a => a.EnableEndpointRouting = false).AddXmlSerializerFormatters();
             services.AddScoped<IStudentRepository, SQLStudentRepository>();
             services.AddScoped<ICourseRepository, SQLCourseRepository>();
+            services.AddTransient(typeof(IRepository<,>), typeof(RepositoryBase<,>));
             services.AddControllersWithViews(config =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();

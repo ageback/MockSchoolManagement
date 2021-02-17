@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MockSchoolManagement.DataRepositories
 {
-    public class SQLCourseRepository
+    public class SQLCourseRepository : ICourseRepository
     {
     }
 }
