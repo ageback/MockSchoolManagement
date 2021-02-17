@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MockSchoolManagement.Models.EnumTypes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -25,5 +26,6 @@ namespace MockSchoolManagement.ViewModels
 
         [Display(Name="头像")]
         public List<IFormFile> Photos{ get; set; }
+        public DateTime EnrollmentDate { get; set; }
     }
 }

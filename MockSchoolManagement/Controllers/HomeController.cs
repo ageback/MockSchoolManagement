@@ -69,6 +69,7 @@ namespace MockSchoolManagement.Controllers
                 Student = stu,
                 PageTitle = "学生详情"
             };
+            model.Student.EncryptedId = _protector.Protect(stu.Id.ToString());
             return View(model);
         }
 
@@ -120,11 +121,13 @@ namespace MockSchoolManagement.Controllers
                     Email = model.Email,
                     Major = model.Major,
                     // 将文件名保存在Student对象的PhotoPath属性中，它将被保存到数据库的Students的表中
-                    PhotoPath = uniqueFileName
+                    PhotoPath = uniqueFileName,
+                    EnrollmentDate=model.EnrollmentDate
                 };
                     
                 _studentRepository.Insert(newStudent);
-                return RedirectToAction("Details", new { id = newStudent.Id });
+                
+                return RedirectToAction("Details", new { id = _protector.Protect(newStudent.Id.ToString()) });
             }
             return View();
         }
