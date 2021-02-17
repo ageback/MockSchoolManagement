@@ -18,6 +18,7 @@ using MockSchoolManagement.DataRepositories;
 using MockSchoolManagement.Infrastructure;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.Security;
+using MockSchoolManagement.Security.CustomTokenProvider;
 
 namespace MockSchoolManagement
 {
@@ -31,6 +32,10 @@ namespace MockSchoolManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // 设置所有令牌有效期为5小时
+            services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromHours(5));
+            // 仅更改电子邮箱验证令牌类型的有效期为3天
+            services.Configure<CustomEmailConfirmationTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromDays(3));
             services.AddAuthentication().AddMicrosoftAccount(msOptions =>
             {
                 msOptions.ClientId = _configuration["Authentication:Microsoft:ClientId"];
@@ -62,8 +67,16 @@ namespace MockSchoolManagement
                 options.Password.RequireLowercase = false;
                 options.Password.RequireDigit = false;
                 options.SignIn.RequireConfirmedEmail = true;
+
+                //通过自定义的CustomEmailConfirmation名称来覆盖旧有的token名称，
+                //是它与AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation")关联在一起
+                options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
             });
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddErrorDescriber<CustomIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddErrorDescriber<CustomIdentityErrorDescriber>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
             //services.AddControllersWithViews(a => a.EnableEndpointRouting = false).AddXmlSerializerFormatters();
             services.AddScoped<IStudentRepository, SQLStudentRepository>();
             services.AddControllersWithViews(config =>
