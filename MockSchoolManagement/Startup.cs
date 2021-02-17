@@ -84,6 +84,7 @@ namespace MockSchoolManagement
                 .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
             //services.AddControllersWithViews(a => a.EnableEndpointRouting = false).AddXmlSerializerFormatters();
             services.AddScoped<IStudentRepository, SQLStudentRepository>();
+            services.AddScoped<ICourseRepository, SQLCourseRepository>();
             services.AddControllersWithViews(config =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
