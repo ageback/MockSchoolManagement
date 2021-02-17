@@ -307,5 +307,35 @@ namespace MockSchoolManagement.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult ChangePassword() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Login");
+                }
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                if (!result.Succeeded)
+                {
+                    foreach(var err in result.Errors)
+                    {
+                        ModelState.AddModelError("", err.Description);
+                    }
+                    return View();
+                }
+
+                await _signInManager.RefreshSignInAsync(user);
+                return View("ChangePasswordConfirmation");
+            }
+            return View(model);
+        }
+
     }
 }
