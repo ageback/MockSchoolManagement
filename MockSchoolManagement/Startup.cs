@@ -72,6 +72,10 @@ namespace MockSchoolManagement
                 //通过自定义的CustomEmailConfirmation名称来覆盖旧有的token名称，
                 //是它与AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation")关联在一起
                 options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+
+                // 密码错误5次锁定账号，15分钟
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             });
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddErrorDescriber<CustomIdentityErrorDescriber>()

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.ViewModels;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace MockSchoolManagement.Controllers
                     ModelState.AddModelError(string.Empty, "电子邮箱未验证");
                     return View(model);
                 }
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(returnUrl))
@@ -62,6 +63,7 @@ namespace MockSchoolManagement.Controllers
                         return RedirectToAction("index", "home");
                     }
                 }
+                if (result.IsLockedOut) return View("AccountLocked");
                 ModelState.AddModelError(string.Empty, "登录失败，请重试");
             }
             return View(model);
@@ -292,9 +294,15 @@ namespace MockSchoolManagement.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null)
                 {
+                    //重置用户密码
                     var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
                     if (result.Succeeded)
                     {
+                        // 重置密码后立即解锁账号
+                        if(await _userManager.IsLockedOutAsync(user))
+                        {
+                            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                        }
                         return View("ResetPasswordConfirmation");
                     }
                     foreach (var err in result.Errors)
