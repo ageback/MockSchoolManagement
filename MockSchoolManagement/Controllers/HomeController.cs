@@ -80,9 +80,14 @@ namespace MockSchoolManagement.Controllers
             return _studentRepository.FirstOrDefault(s => s.Id == Convert.ToInt32(_protector.Unprotect(id)));
         }
 
-        public IActionResult Index(int? pageNumber, int pageSize = 10, string sortBy = "Id")
+        public IActionResult Index(string searchString, string sortBy = "Id")
         {
+            ViewBag.CurrentFilter = searchString?.Trim();
             IQueryable<Student> query = _studentRepository.GetAll().OrderBy(sortBy).AsNoTracking();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(s => s.Name.Contains(searchString) || s.Email.Contains(searchString));
+            }
             List<Student> model = query.ToList().Select(s =>
             {
                 s.EncryptedId = _protector.Protect(s.Id.ToString());
