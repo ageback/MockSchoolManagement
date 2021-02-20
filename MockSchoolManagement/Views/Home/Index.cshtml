@@ -6,11 +6,22 @@
         <thead>
             <tr>
                 <th scope="col">头像</th>
-                <th scope="col">名字</th>
-                <th scope="col">邮箱地址</th>
-                <th scope="col">主修科目</th>
-                <th scope="col">入学时间</th>
-                <th scope="col">操作</th>
+                <th scope="col" class="sort-link">
+                    <a asp-action="index" asp-route-sortby="Name">名字</a>
+                    <a class="pl-3" asp-action="index" asp-route-sortby="Name desc">降序</a>
+                </th>
+                <th>
+                    <a asp-action="index" asp-route-sortby="Email">电子邮箱</a>
+                    <a class="pl-3" asp-action="index" asp-route-sortby="Email desc">降序</a>
+                </th>
+                <th scope="col">
+                    <a asp-action="index" asp-route-sortby="Major">主修科目</a>
+                    <a class="pl-3" asp-action="index" asp-route-sortby="Major desc">降序</a>
+                </th>
+                <th scope="col">
+                    <a asp-action="index" asp-route-sortby="EnrollmentDate">入学时间</a>
+                    <a class="pl-3" asp-action="index" asp-route-sortby="EnrollmentDate desc">降序</a>
+                </th>
             </tr>
         </thead>
         <tbody>

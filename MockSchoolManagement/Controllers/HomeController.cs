@@ -13,6 +13,8 @@ using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.Security;
 using MockSchoolManagement.ViewModels;
+using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace MockSchoolManagement.Controllers
 {
@@ -78,14 +80,15 @@ namespace MockSchoolManagement.Controllers
             return _studentRepository.FirstOrDefault(s => s.Id == Convert.ToInt32(_protector.Unprotect(id)));
         }
 
-        public ViewResult Index()
+        public IActionResult Index(int? pageNumber, int pageSize = 10, string sortBy = "Id")
         {
-            List<Student> model = _studentRepository.GetAllList().Select(s =>
+            IQueryable<Student> query = _studentRepository.GetAll().OrderBy(sortBy).AsNoTracking();
+            List<Student> model = query.ToList().Select(s =>
             {
                 s.EncryptedId = _protector.Protect(s.Id.ToString());
                 return s;
             }).ToList();
-            
+
             return View(model);
         }
 
