@@ -17,6 +17,7 @@ using MockSchoolManagement.Application.Students;
 using MockSchoolManagement.CustomerMiddlewares;
 using MockSchoolManagement.DataRepositories;
 using MockSchoolManagement.Infrastructure;
+using MockSchoolManagement.Infrastructure.Data;
 using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.Security;
@@ -104,6 +105,8 @@ namespace MockSchoolManagement
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
+            // 数据初始化
+            app.UseDataInitializer();
             if (env.IsDevelopment())
             {
                 DeveloperExceptionPageOptions options = new DeveloperExceptionPageOptions
