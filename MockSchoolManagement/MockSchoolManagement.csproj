@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\lib\font-awesome\" />
     <Folder Include="wwwroot\lib\twitter-bootstrap\js\" />
   </ItemGroup>
 

@@ -15,6 +15,8 @@ using MockSchoolManagement.Security;
 using MockSchoolManagement.ViewModels;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
+using MockSchoolManagement.Application.Dtos;
+using MockSchoolManagement.Application.Students;
 
 namespace MockSchoolManagement.Controllers
 {
@@ -23,14 +25,15 @@ namespace MockSchoolManagement.Controllers
         private readonly IRepository<Student,int> _studentRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IDataProtector _protector;
+        private readonly IStudentService _studentService;
 
         public HomeController(IRepository<Student,int> studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider,
-            DataProtectionPurposeStrings dataProtectionPurposeStrings)
+            DataProtectionPurposeStrings dataProtectionPurposeStrings,IStudentService studentService)
         {
             _studentRepository = studentRepository;
             _webHostEnvironment = webHostEnvironment;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
-
+            _studentService = studentService;
         }
 
        
@@ -80,21 +83,20 @@ namespace MockSchoolManagement.Controllers
             return _studentRepository.FirstOrDefault(s => s.Id == Convert.ToInt32(_protector.Unprotect(id)));
         }
 
-        public IActionResult Index(string searchString, string sortBy = "Id")
+        public async Task<IActionResult> Index(string searchString, int currentPage = 1, string sortBy = "Id")
         {
-            ViewBag.CurrentFilter = searchString?.Trim();
-            IQueryable<Student> query = _studentRepository.GetAll().OrderBy(sortBy).AsNoTracking();
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                query = query.Where(s => s.Name.Contains(searchString) || s.Email.Contains(searchString));
-            }
-            List<Student> model = query.ToList().Select(s =>
+            ViewBag.CurrentFilter = searchString = searchString?.Trim();
+            PaginationModel paginationModel = new PaginationModel();
+            paginationModel.Count = await _studentRepository.CountAsync();
+            paginationModel.CurrentPage = currentPage;
+            var students = await _studentService.GetPaginatedResult(paginationModel.CurrentPage, searchString, sortBy);
+            paginationModel.Data = students.Select(s =>
             {
                 s.EncryptedId = _protector.Protect(s.Id.ToString());
                 return s;
             }).ToList();
 
-            return View(model);
+            return View(paginationModel);
         }
 
         /// <summary>
