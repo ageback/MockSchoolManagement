@@ -1,4 +1,6 @@
-﻿using MockSchoolManagement.Models;
+﻿using MockSchoolManagement.Application.Dtos;
+using MockSchoolManagement.Application.Students.Dtos;
+using MockSchoolManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,6 @@ namespace MockSchoolManagement.Application.Students
 {
     public interface IStudentService
     {
-        Task<List<Student>> GetPaginatedResult(int currentPage, string searchString, string sortBy, int pageSize = 2);
+        Task<PagedResultDto<Student>> GetPaginatedResult(GetStudentInput input);
     }
 }

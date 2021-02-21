@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
+using MockSchoolManagement.Application.Dtos;
+using MockSchoolManagement.Application.Students.Dtos;
 
 namespace MockSchoolManagement.Application.Students
 {
@@ -18,15 +20,27 @@ namespace MockSchoolManagement.Application.Students
         }
 
 
-        public async Task<List<Student>> GetPaginatedResult(int currentPage, string searchString,string sortBy, int pageSize = 2)
+
+        public async Task<PagedResultDto<Student>> GetPaginatedResult(GetStudentInput input)
         {
             var query = _studentRepository.GetAll();
-            if(!string.IsNullOrEmpty(searchString))
+            if(!string.IsNullOrEmpty(input.FilterText))
             {
-                query = query.Where(s => s.Name.Contains(searchString) || s.Email.Contains(searchString));
+                query = query.Where(s => s.Name.Contains(input.FilterText) || s.Email.Contains(input.FilterText));
             }
-            query = query.OrderBy(sortBy);
-            return await query.Skip((currentPage - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+            var count = query.Count();
+            query = query.OrderBy(input.Sorting).Skip((input.CurrentPage - 1) * input.MaxResultCount).Take(input.MaxResultCount);
+            var models = await query.AsNoTracking().ToListAsync();
+            var dtos = new PagedResultDto<Student>
+            {
+                TotalCount = count,
+                CurrentPage = input.CurrentPage,
+                MaxResultCount = input.MaxResultCount,
+                Data = models,
+                FilterText = input.FilterText,
+                Sorting = input.Sorting
+            };
+            return dtos;
         }
     }
 }

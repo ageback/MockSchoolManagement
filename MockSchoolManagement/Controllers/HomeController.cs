@@ -17,6 +17,7 @@ using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 using MockSchoolManagement.Application.Dtos;
 using MockSchoolManagement.Application.Students;
+using MockSchoolManagement.Application.Students.Dtos;
 
 namespace MockSchoolManagement.Controllers
 {
@@ -83,20 +84,15 @@ namespace MockSchoolManagement.Controllers
             return _studentRepository.FirstOrDefault(s => s.Id == Convert.ToInt32(_protector.Unprotect(id)));
         }
 
-        public async Task<IActionResult> Index(string searchString, int currentPage = 1, string sortBy = "Id")
+        public async Task<IActionResult> Index(GetStudentInput input)
         {
-            ViewBag.CurrentFilter = searchString = searchString?.Trim();
-            PaginationModel paginationModel = new PaginationModel();
-            paginationModel.Count = await _studentRepository.CountAsync();
-            paginationModel.CurrentPage = currentPage;
-            var students = await _studentService.GetPaginatedResult(paginationModel.CurrentPage, searchString, sortBy);
-            paginationModel.Data = students.Select(s =>
+            var dtos = await _studentService.GetPaginatedResult(input);
+            dtos.Data = dtos.Data.Select(s =>
             {
                 s.EncryptedId = _protector.Protect(s.Id.ToString());
                 return s;
             }).ToList();
-
-            return View(paginationModel);
+            return View(dtos);
         }
 
         /// <summary>
