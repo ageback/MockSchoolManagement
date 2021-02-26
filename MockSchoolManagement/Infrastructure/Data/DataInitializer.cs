@@ -73,7 +73,7 @@ namespace MockSchoolManagement.Infrastructure.Data
 
                 #region 用户种子数据
                 if (dbcontext.Users.Any()) { return builder; }
-                var user = new ApplicationUser { Email = "lmh@52abp.com", UserName = "LuMenghu", EmailConfirmed = true, City = "无锡" };
+                var user = new ApplicationUser { Email = "lmh@52abp.com", UserName = "lmh@52abp.com", EmailConfirmed = true, City = "无锡" };
                 userManager.CreateAsync(user, "12345").Wait();
                 dbcontext.SaveChanges();
                 var adminRole = "Admin";
