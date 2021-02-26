@@ -213,5 +213,18 @@ namespace MockSchoolManagement.Controllers
             }
             return uniqueFileName;
         }
+
+        public async Task<IActionResult> About()
+        {
+            var data = from student in _studentRepository.GetAll()
+                       group student by student.EnrollmentDate into dateGroup
+                       select new EnrollmentDateGroupDto()
+                       {
+                           EnrollmentDate = dateGroup.Key,
+                           StudentCount = dateGroup.Count()
+                       };
+            var dtos = await data.AsNoTracking().ToListAsync();
+            return View(dtos);
+        }
     }
 }
