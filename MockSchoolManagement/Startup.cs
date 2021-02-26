@@ -29,8 +29,13 @@ namespace MockSchoolManagement
     public class Startup
     {
         private IConfiguration _configuration;
+        private IWebHostEnvironment _env;
 
-        public Startup(IConfiguration configuration) => _configuration = configuration;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        {
+            this._configuration = configuration;
+            this._env = env;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -92,16 +97,16 @@ namespace MockSchoolManagement
             services.AddScoped<IStudentRepository, SQLStudentRepository>();
             services.AddScoped<ICourseRepository, SQLCourseRepository>();
             services.AddTransient(typeof(IRepository<,>), typeof(RepositoryBase<,>));
-            services.AddControllersWithViews(config =>
+            var builder = services.AddControllersWithViews(config =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             }).AddXmlSerializerFormatters();
 
-            //services.AddSingleton<IStudentRepository, MockStudentRepository>();
-            //services.AddScoped<IStudentRepository, MockStudentRepository>();
-            //services.AddTransient<IStudentRepository, MockStudentRepository>();
-            
+            if (_env.IsDevelopment())
+            {
+                builder.AddRazorRuntimeCompilation();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
