@@ -24,7 +24,7 @@ namespace MockSchoolManagement.Application.Courses
             var query = _courseRepository.GetAll();
             var count = query.Count();
             query = query.OrderBy(input.Sorting).Skip((input.CurrentPage - 1) * input.MaxResultCount).Take(input.MaxResultCount);
-            var models = await query.AsNoTracking().ToListAsync();
+            var models = await query.Include(a => a.Department).AsNoTracking().ToListAsync();
             var dtos = new PagedResultDto<Course>
             {
                 TotalCount = count,
