@@ -23,6 +23,7 @@ using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.Security;
 using MockSchoolManagement.Security.CustomTokenProvider;
+using NetCore.AutoRegisterDi;
 
 namespace MockSchoolManagement
 {
@@ -66,8 +67,9 @@ namespace MockSchoolManagement
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
             services.AddSingleton<DataProtectionPurposeStrings>();
-            services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<ICourseService, CourseService>();
+
+            // 自动注入服务到依赖注入容器
+            services.RegisterAssemblyPublicNonGenericClasses().Where(c => { return c.Name.EndsWith("Service") || c.Name.EndsWith("Repository"); }).AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
             // 使用 sqlserver 数据库，通过IConfiguration访问去获取，自定义名称的MockStudentDBConnection作为连接字符串
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("MockStudentDBConnection")));
             // 禁用一些密码策略
@@ -93,9 +95,6 @@ namespace MockSchoolManagement
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders()
                 .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
-            //services.AddControllersWithViews(a => a.EnableEndpointRouting = false).AddXmlSerializerFormatters();
-            services.AddScoped<IStudentRepository, SQLStudentRepository>();
-            services.AddScoped<ICourseRepository, SQLCourseRepository>();
             services.AddTransient(typeof(IRepository<,>), typeof(RepositoryBase<,>));
             var builder = services.AddControllersWithViews(config =>
             {
