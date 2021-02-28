@@ -57,7 +57,7 @@
                                 <a asp-controller="Course" class="btn btn-info" asp-action="Details" asp-route-id="@item.CourseID">
                                     查看
                                 </a>
-                                <a asp-controller="Course" class="btn btn-primary m-1" asp-action="Edit" asp-route-id="@item.CourseID">
+                                <a asp-controller="Course" class="btn btn-primary m-1" asp-action="Edit" asp-route-courseid="@item.CourseID">
                                     编辑
                                 </a>
                                 <span id="confirmDeleteSpan_@item.CourseID" style="display:none">

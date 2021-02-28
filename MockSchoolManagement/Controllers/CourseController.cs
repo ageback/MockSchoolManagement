@@ -64,6 +64,60 @@ namespace MockSchoolManagement.Controllers
             return View();
         }
         #endregion 添加课程
+
+        #region 课程编辑
+        public IActionResult Edit(int? courseId)
+        {
+            if (!courseId.HasValue)
+            {
+                return CourseNotFoundError(courseId);
+            }
+            var course = _courseRepository.FirstOrDefault(a => a.CourseID == courseId);
+            if (course == null)
+            {
+                return CourseNotFoundError(courseId);
+            }
+            var dtos = DepartmentsDropDownList(course.DepartmentID);
+            CourseCreateViewModel courseCreateViewModel = new CourseCreateViewModel
+            {
+                DepartmentList = dtos,
+                CourseID = course.CourseID,
+                Credits = course.Credits,
+                Title = course.Title,
+                DepartmentID = course.DepartmentID
+            };
+            return View(courseCreateViewModel);
+        }
+
+        private IActionResult CourseNotFoundError(int? courseId)
+        {
+            ViewBag.ErrorMessage = $"课程编号{courseId}的信息不存在，请重试。";
+            return View("NotFound");
+        }
+
+        [HttpPost]
+        public IActionResult Edit(CourseCreateViewModel input)
+        {
+            if (ModelState.IsValid)
+            {
+                var course = _courseRepository.FirstOrDefault(a => a.CourseID == input.CourseID);
+                if (course != null)
+                {
+                    course.CourseID = input.CourseID;
+                    course.Credits = input.Credits;
+                    course.DepartmentID = input.DepartmentID;
+                    course.Title = input.Title;
+                    _courseRepository.Update(course);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return CourseNotFoundError(input.CourseID);
+                }
+            }
+            return View(input);
+        }
+        #endregion 课程编辑
         private SelectList DepartmentsDropDownList(object selectedDepartment = null)
         {
             var models = _departmentRepository.GetAll().OrderBy(a => a.Name).AsNoTracking().ToList();
