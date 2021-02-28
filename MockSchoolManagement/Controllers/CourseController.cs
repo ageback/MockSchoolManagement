@@ -118,6 +118,17 @@ namespace MockSchoolManagement.Controllers
             return View(input);
         }
         #endregion 课程编辑
+
+        public async Task<ViewResult> Details(int courseId)
+        {
+            var course = await _courseRepository.GetAll().Include(a=>a.Department).FirstOrDefaultAsync(a => a.CourseID == courseId);
+            if (course == null)
+            {
+                ViewBag.ErrorMessage = $"课程编号{courseId}的信息不存在，请重试。";
+                return View("NotFound");
+            }
+            return View(course);
+        }
         private SelectList DepartmentsDropDownList(object selectedDepartment = null)
         {
             var models = _departmentRepository.GetAll().OrderBy(a => a.Name).AsNoTracking().ToList();

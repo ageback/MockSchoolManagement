@@ -11,6 +11,7 @@ namespace MockSchoolManagement.Models
         public int DepartmentID { get; set; }
 
         [StringLength(50,MinimumLength =3)]
+        [Display(Name="学院名称")]
         public string Name { get; set; }
 
         /// <summary>
