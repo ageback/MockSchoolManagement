@@ -19,12 +19,15 @@ namespace MockSchoolManagement.Controllers
         private readonly ICourseService _courseService;
         private readonly IRepository<Course, int> _courseRepository;
         private readonly IRepository<Department, int> _departmentRepository;
+        private readonly IRepository<CourseAssignment, int> _courseAssignmentRepository;
 
-        public CourseController(ICourseService courseService, IRepository<Course, int> courseRepository,IRepository<Department, int> departmentRepository)
+        public CourseController(ICourseService courseService, IRepository<Course, int> courseRepository,IRepository<Department, int> departmentRepository,
+            IRepository<CourseAssignment, int> courseAssignmentRepository)
         {
             _courseService = courseService;
             _courseRepository = courseRepository;
             _departmentRepository = departmentRepository;
+            _courseAssignmentRepository = courseAssignmentRepository;
         }
 
         public async Task<ActionResult> Index(GetCourseInput input)
@@ -134,6 +137,20 @@ namespace MockSchoolManagement.Controllers
             var models = _departmentRepository.GetAll().OrderBy(a => a.Name).AsNoTracking().ToList();
             var dtos = new SelectList(models, "DepartmentID", "Name", selectedDepartment);
             return dtos;
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int courseId)
+        {
+            var model = await _courseRepository.FirstOrDefaultAsync(a => a.CourseID == courseId);
+            if (model == null)
+            {
+                return CourseNotFoundError(courseId);
+            }
+            await _courseAssignmentRepository.DeleteAsync(a => a.CourseID == model.CourseID);
+            await _courseRepository.DeleteAsync(a => a.CourseID == courseId);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

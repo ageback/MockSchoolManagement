@@ -53,7 +53,7 @@
                         <td>@item.Credits</td>
                         <td>@item.Department.Name</td>
                         <td>
-                            <form method="post" asp-action="Delete" asp-route-id="@item.CourseID">
+                            <form method="post" asp-action="Delete" asp-route-courseId="@item.CourseID">
                                 <a asp-controller="Course" class="btn btn-info" asp-action="Details" asp-route-courseid="@item.CourseID">
                                     查看
                                 </a>
