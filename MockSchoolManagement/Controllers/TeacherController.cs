@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MockSchoolManagement.Application.Teachers;
 using MockSchoolManagement.Application.Teachers.Dtos;
+using MockSchoolManagement.Infrastructure.Repositories;
+using MockSchoolManagement.Models;
 using MockSchoolManagement.ViewModels;
+using MockSchoolManagement.ViewModels.Teacher;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +16,14 @@ namespace MockSchoolManagement.Controllers
     public class TeacherController : Controller
     {
         private readonly ITeacherService _teacherService;
+        private readonly IRepository<Teacher,int> _teacherRepository;
+        private readonly IRepository<Course,int> _courseRepository;
 
-        public TeacherController(ITeacherService teacherService)
+        public TeacherController(ITeacherService teacherService, IRepository<Course,int> courseRepository,IRepository<Teacher,int> teacherRepository)
         {
             _teacherService = teacherService;
+            _courseRepository = courseRepository;
+            _teacherRepository = teacherRepository; 
         }
         public async Task<IActionResult> Index(GetTeacherInput input)
         {
@@ -42,6 +50,45 @@ namespace MockSchoolManagement.Controllers
             }
             dto.Teachers = models;
             return View(dto);
+        }
+
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            var model = await _teacherRepository.GetAll().Include(a => a.OfficeLocation).Include(a => a.CourseAssignments)
+                .ThenInclude(a => a.Course).AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            if (model == null)
+            {
+                ViewBag.ErrorMessage = $"教师信息ID为{id}的信息不存在，请重试。";
+                return View("NotFound");
+            }
+            var dto = new TeacherCreateViewModel
+            {
+                Name = model.Name,
+                Id = model.Id,
+                HireDate = model.HireDate,
+                OfficeLocation = model.OfficeLocation
+            };
+            var assignedCourses = AssignedCourseDropDownList(model);
+            dto.AssignedCourses = assignedCourses;
+            return View(dto);
+        }
+
+        private List<AssignedCourseViewModel> AssignedCourseDropDownList(Teacher teacher)
+        {
+            var allCourses = _courseRepository.GetAllList();
+            var teacherCourses = new HashSet<int>(teacher.CourseAssignments.Select(c => c.CourseID));
+            var viewModel = new List<AssignedCourseViewModel>();
+            foreach(var course in allCourses)
+            {
+                viewModel.Add(new AssignedCourseViewModel
+                {
+                    CourseID = course.CourseID,
+                    Title=course.Title,
+                    IsSelected=teacherCourses.Contains(course.CourseID)
+                });
+            }
+            return viewModel;
         }
     }
 }
