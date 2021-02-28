@@ -10,7 +10,7 @@ namespace MockSchoolManagement.ViewModels
     public class TeacherListViewModel
     {
         public PagedResultDto<Teacher> Teachers { get; set; }
-        public List<Course> Courses { get; set; }
+        public List<MockSchoolManagement.Models.Course> Courses { get; set; }
         public List<StudentCourse> StudentCourses { get; set; }
 
         /// <summary>
