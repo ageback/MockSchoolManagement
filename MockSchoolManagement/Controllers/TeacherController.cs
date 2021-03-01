@@ -104,6 +104,51 @@ namespace MockSchoolManagement.Controllers
             return View(dto);
         }
 
+        public IActionResult Create()
+        {
+            var allCourses = _courseRepository.GetAllList();
+            var viewModel = new List<AssignedCourseViewModel>();
+            foreach(var course in allCourses)
+            {
+                viewModel.Add(new AssignedCourseViewModel
+                {
+                    CourseID = course.CourseID,
+                    IsSelected = false,
+                    Title = course.Title
+                });
+            }
+            var dto = new TeacherCreateViewModel();
+            dto.AssignedCourses = viewModel;
+            return View(dto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(TeacherCreateViewModel input)
+        {
+            if (ModelState.IsValid)
+            {
+                var teacher = new Teacher
+                {
+                    HireDate = input.HireDate,
+                    Name = input.Name,
+                    OfficeLocation = input.OfficeLocation,
+                    CourseAssignments = new List<CourseAssignment>()
+                };
+                var courses = input.AssignedCourses.Where(a => a.IsSelected).ToList();
+                foreach(var course in courses)
+                {
+                    teacher.CourseAssignments.Add(new CourseAssignment
+                    {
+                        CourseID = course.CourseID,
+                        TeacherID = teacher.Id
+                    });
+                }
+                await _teacherRepository.InsertAsync(teacher);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(input);
+        }
+
         private IActionResult TeacherNotFoundError(int? id)
         {
             ViewBag.ErrorMessage = $"教师信息ID为{id}的信息不存在，请重试。";
