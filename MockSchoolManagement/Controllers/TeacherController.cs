@@ -53,14 +53,44 @@ namespace MockSchoolManagement.Controllers
         }
 
 
+        [HttpPost,ActionName("Edit")]
+        public async Task<IActionResult> EditPost(TeacherCreateViewModel input)
+        {
+            if (ModelState.IsValid)
+            {
+                var teacher = await _teacherRepository.GetAll().Include(i => i.OfficeLocation)
+                    .Include(i => i.CourseAssignments)
+                        .ThenInclude(i => i.Course)
+                    .FirstOrDefaultAsync(m => m.Id == input.Id);
+                if (teacher == null)
+                {
+                    return TeacherNotFoundError(input.Id);
+                }
+                teacher.HireDate = input.HireDate;
+                teacher.Name = input.Name;
+                teacher.OfficeLocation = input.OfficeLocation;
+                teacher.CourseAssignments = new List<CourseAssignment>();
+                var courses = input.AssignedCourses.Where(a => a.IsSelected == true).ToList();
+                foreach(var item in courses)
+                {
+                    teacher.CourseAssignments.Add(new CourseAssignment
+                    {
+                        CourseID = item.CourseID,
+                        TeacherID = teacher.Id
+                    });
+                }
+                await _teacherRepository.UpdateAsync(teacher);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(input); 
+        }
         public async Task<IActionResult> Edit(int? id)
         {
             var model = await _teacherRepository.GetAll().Include(a => a.OfficeLocation).Include(a => a.CourseAssignments)
                 .ThenInclude(a => a.Course).AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
             if (model == null)
             {
-                ViewBag.ErrorMessage = $"教师信息ID为{id}的信息不存在，请重试。";
-                return View("NotFound");
+                return TeacherNotFoundError(id);
             }
             var dto = new TeacherCreateViewModel
             {
@@ -72,6 +102,12 @@ namespace MockSchoolManagement.Controllers
             var assignedCourses = AssignedCourseDropDownList(model);
             dto.AssignedCourses = assignedCourses;
             return View(dto);
+        }
+
+        private IActionResult TeacherNotFoundError(int? id)
+        {
+            ViewBag.ErrorMessage = $"教师信息ID为{id}的信息不存在，请重试。";
+            return View("NotFound");
         }
 
         private List<AssignedCourseViewModel> AssignedCourseDropDownList(Teacher teacher)
