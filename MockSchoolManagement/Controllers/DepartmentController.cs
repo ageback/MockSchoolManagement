@@ -95,5 +95,48 @@ namespace MockSchoolManagement.Controllers
             await _departmentRepository.DeleteAsync(a => a.DepartmentID == id);
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await _departmentRepository.GetAll().Include(a => a.Administrator).AsNoTracking().FirstOrDefaultAsync(a => a.DepartmentID == id);
+            if (model == null)
+            {
+                return DepartmentNotFoundError(id);
+            }
+            var teacherList = TeachersDropDownList();
+            var dto = new DepartmentCreateViewModel
+            {
+                DepartmentID = model.DepartmentID,
+                Name = model.Name,
+                Budget = model.Budget,
+                StartDate = model.StartDate,
+                TeacherID = model.TeacherID,
+                Administrator = model.Administrator,
+                RowVersion = model.RowVersion,
+                TeacherList = teacherList
+            };
+            return View(dto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(DepartmentCreateViewModel input)
+        {
+            if (ModelState.IsValid)
+            {
+                var model = await _departmentRepository.GetAll().Include(a => a.Administrator).FirstOrDefaultAsync(a => a.DepartmentID == input.DepartmentID);
+                if (model == null)
+                {
+                    return DepartmentNotFoundError(input.DepartmentID);
+                }
+                model.DepartmentID = input.DepartmentID;
+                model.Name = input.Name;
+                model.StartDate = input.StartDate;
+                model.Budget = input.Budget;
+                model.TeacherID = input.TeacherID;
+                await _departmentRepository.UpdateAsync(model);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(input);
+        }
     }
 }
