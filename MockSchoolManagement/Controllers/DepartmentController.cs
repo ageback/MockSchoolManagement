@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MockSchoolManagement.Application.Departments;
 using MockSchoolManagement.Application.Departments.Dtos;
 using MockSchoolManagement.Infrastructure;
@@ -32,6 +34,13 @@ namespace MockSchoolManagement.Controllers
         {
             var models = await _departmentsService.GetPagedDepartmentsList(input);
             return View(models);
+        }
+
+
+        private SelectList TeachersDropDownList(object selectedTeacher = null)
+        {
+            var models = _teacherRepository.GetAll().OrderBy(a => a.Name).AsNoTracking().ToList();
+            return new SelectList(models, "Id", "Name", selectedTeacher); 
         }
     }
 }
