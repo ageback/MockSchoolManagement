@@ -25,7 +25,7 @@ namespace MockSchoolManagement.Models
         /// 成立时间
         /// </summary>
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd)",ApplyFormatInEditMode =true)]
+        [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd}",ApplyFormatInEditMode =true)]
         [Display(Name="成立时间")]
         public DateTime StartDate { get; set; }
 
@@ -37,5 +37,8 @@ namespace MockSchoolManagement.Models
         public Teacher Administrator { get; set; }
 
         public ICollection<Course> Courses { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
