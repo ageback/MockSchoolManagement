@@ -83,5 +83,17 @@ namespace MockSchoolManagement.Controllers
             ViewBag.ErrorMessage = $"学院ID为{id}的信息不存在，请重试。";
             return View("NotFound");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var model = await _departmentRepository.FirstOrDefaultAsync(a => a.DepartmentID == id);
+            if (model == null)
+            {
+                return DepartmentNotFoundError(id);
+            }
+            await _departmentRepository.DeleteAsync(a => a.DepartmentID == id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
