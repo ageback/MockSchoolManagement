@@ -19,6 +19,7 @@ namespace MockSchoolManagement.Models
         /// </summary>
         [DataType(DataType.Currency)]
         [Column(TypeName ="money")]
+        [Display(Name="预算")]
         public decimal Budget { get; set; }
 
         /// <summary>
@@ -29,6 +30,7 @@ namespace MockSchoolManagement.Models
         [Display(Name="成立时间")]
         public DateTime StartDate { get; set; }
 
+        [Display(Name="负责人")]
         public int? TeacherID { get; set; }
 
         /// <summary>

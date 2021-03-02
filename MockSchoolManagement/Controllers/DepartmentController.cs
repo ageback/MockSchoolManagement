@@ -68,5 +68,20 @@ namespace MockSchoolManagement.Controllers
             }
             return View();
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var model = await _departmentRepository.GetAll().Include(a => a.Administrator).FirstOrDefaultAsync(a => a.DepartmentID == id);
+            if (model == null)
+            {
+                return DepartmentNotFoundError(id);
+            }
+            return View(model);
+        }
+        private IActionResult DepartmentNotFoundError(int? id)
+        {
+            ViewBag.ErrorMessage = $"学院ID为{id}的信息不存在，请重试。";
+            return View("NotFound");
+        }
     }
 }

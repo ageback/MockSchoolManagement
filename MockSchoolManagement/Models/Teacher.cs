@@ -15,6 +15,7 @@ namespace MockSchoolManagement.Models
         [StringLength(50)]
         [Column("TeacherName")]
         public string Name { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "聘用时间")]
