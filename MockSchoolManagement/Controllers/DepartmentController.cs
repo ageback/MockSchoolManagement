@@ -6,6 +6,7 @@ using MockSchoolManagement.Application.Departments.Dtos;
 using MockSchoolManagement.Infrastructure;
 using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
+using MockSchoolManagement.ViewModels.Department;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,31 @@ namespace MockSchoolManagement.Controllers
         {
             var models = _teacherRepository.GetAll().OrderBy(a => a.Name).AsNoTracking().ToList();
             return new SelectList(models, "Id", "Name", selectedTeacher); 
+        }
+
+        public IActionResult Create()
+        {
+            var dto = new DepartmentCreateViewModel { TeacherList = TeachersDropDownList() };
+            return View(dto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(DepartmentCreateViewModel input)
+        {
+            if (ModelState.IsValid)
+            {
+                Department model = new Department
+                {
+                    StartDate = input.StartDate,
+                    DepartmentID = input.DepartmentID,
+                    TeacherID = input.TeacherID,
+                    Budget = input.Budget,
+                    Name = input.Name
+                };
+                await _departmentRepository.InsertAsync(model);
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
         }
     }
 }

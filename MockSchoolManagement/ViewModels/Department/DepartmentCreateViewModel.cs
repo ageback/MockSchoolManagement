@@ -27,6 +27,7 @@ namespace MockSchoolManagement.ViewModels.Department
         [Display(Name="成立时间")]
         public DateTime StartDate { get; set; }
 
+        [Display(Name ="院长")]
         public int? TeacherID { get; set; }
 
         /// <summary>
