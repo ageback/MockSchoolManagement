@@ -24,6 +24,8 @@ namespace MockSchoolManagement.Infrastructure
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Person> People { get; set; }
 
+        public DbSet<TodoItem> TodoItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
