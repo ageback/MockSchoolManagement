@@ -22,16 +22,13 @@ namespace MockSchoolManagement.Infrastructure
         public DbSet<OfficeLocation> OfficeLocations { get; set; }
         public DbSet<CourseAssignment> CourseAssignments { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Person> People { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Seed();
 
-            //指定实体在数据库中生成的名称
-            modelBuilder.Entity<Course>().ToTable("Course", "School");
-            modelBuilder.Entity<StudentCourse>().ToTable("StudentCourse");
-            modelBuilder.Entity<Student>().ToTable("Student");
 
             // 获取当前系统中所有领域模型上的外键列表
             var foreignKeys = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());

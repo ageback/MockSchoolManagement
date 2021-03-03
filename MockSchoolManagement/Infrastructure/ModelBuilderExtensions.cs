@@ -19,9 +19,10 @@ namespace MockSchoolManagement.Infrastructure
             //    new Student { Id = 2, Name = "张三", Major = Models.EnumTypes.MajorEnum.ElectronicCommerce, Email = "zs@xxx.ccc" }
             //    );
 
+
             modelBuilder.Entity<Course>().ToTable("Course", "School");
             modelBuilder.Entity<StudentCourse>().ToTable("StudentCourse", "School");
-            modelBuilder.Entity<Student>().ToTable("Student", "School");
+            modelBuilder.Entity<Person>().ToTable("Person");
             modelBuilder.Entity<CourseAssignment>().HasKey(c => new { c.CourseID, c.TeacherID });
         }
     }
