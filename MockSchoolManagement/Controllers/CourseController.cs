@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MockSchoolManagement.Application.Courses;
 using MockSchoolManagement.Application.Courses.Dtos;
 using MockSchoolManagement.DataRepositories;
+using MockSchoolManagement.Infrastructure;
 using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
 using MockSchoolManagement.ViewModels.Course;
@@ -20,14 +21,16 @@ namespace MockSchoolManagement.Controllers
         private readonly IRepository<Course, int> _courseRepository;
         private readonly IRepository<Department, int> _departmentRepository;
         private readonly IRepository<CourseAssignment, int> _courseAssignmentRepository;
+        private readonly AppDbContext _dbContext;
 
         public CourseController(ICourseService courseService, IRepository<Course, int> courseRepository,IRepository<Department, int> departmentRepository,
-            IRepository<CourseAssignment, int> courseAssignmentRepository)
+            IRepository<CourseAssignment, int> courseAssignmentRepository,AppDbContext dbContext)
         {
             _courseService = courseService;
             _courseRepository = courseRepository;
             _departmentRepository = departmentRepository;
             _courseAssignmentRepository = courseAssignmentRepository;
+            _dbContext = dbContext;
         }
 
         public async Task<ActionResult> Index(GetCourseInput input)
@@ -151,6 +154,20 @@ namespace MockSchoolManagement.Controllers
             await _courseAssignmentRepository.DeleteAsync(a => a.CourseID == model.CourseID);
             await _courseRepository.DeleteAsync(a => a.CourseID == courseId);
             return RedirectToAction(nameof(Index));
+        }
+        public IActionResult UpdateCourseCredits()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCourseCredits(int? multiplier)
+        {
+            if (multiplier != null)
+            {
+                ViewBag.RowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("UPDATE School.Course SET Credits=Credits*{0}", parameters: multiplier);
+            }
+            return View();
         }
     }
 }
