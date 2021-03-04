@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MockSchoolManagement.Infrastructure.Repositories;
 using MockSchoolManagement.Models;
@@ -11,7 +12,7 @@ namespace MockSchoolManagement.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]/[action]")]
     public class TodoController : ControllerBase
     {
         private readonly IRepository<TodoItem, long> _todoItemRepository;
@@ -23,7 +24,7 @@ namespace MockSchoolManagement.Controllers
 
         // GET:api/Todo
         [HttpGet]
-        public async Task<ActionResult<List<TodoItem>>> GetTodo()
+        public async Task<ActionResult<List<TodoItem>>> GetAll()
         {
             return await _todoItemRepository.GetAllListAsync();
         }
@@ -31,7 +32,7 @@ namespace MockSchoolManagement.Controllers
         
         // GET:api/Todo/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
+        public async Task<ActionResult<TodoItem>> GetById(long id)
         {
             var todoItem = await _todoItemRepository.FirstOrDefaultAsync(a => a.Id == id);
             if (todoItem == null) { return NotFound(); }
@@ -39,7 +40,7 @@ namespace MockSchoolManagement.Controllers
         }
         // PUT:api/Todo/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id,TodoItem todoItem)
+        public async Task<IActionResult> Update(long id,TodoItem todoItem)
         {
             if (id != todoItem.Id)
             {
@@ -52,14 +53,16 @@ namespace MockSchoolManagement.Controllers
 
         // POST:api/Todo
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TodoItem>> Create(TodoItem todoItem)
         {
             await _todoItemRepository.InsertAsync(todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction(nameof(GetAll), new { id = todoItem.Id }, todoItem);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TodoItem>> DeleteTodoItem(long id)
+        public async Task<ActionResult<TodoItem>> Delete(long id)
         {
             var todoItem = await _todoItemRepository.FirstOrDefaultAsync(a => a.Id == id);
             if (todoItem == null)
