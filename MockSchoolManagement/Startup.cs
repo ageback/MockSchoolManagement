@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using MockSchoolManagement.Application.Courses;
 using MockSchoolManagement.Application.Students;
 using MockSchoolManagement.CustomerMiddlewares;
@@ -42,6 +43,9 @@ namespace MockSchoolManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MockSchoolManagement PI", Version = "v1" });
+            });
             // 设置所有令牌有效期为5小时
             services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromHours(5));
             // 仅更改电子邮箱验证令牌类型的有效期为3天
@@ -128,11 +132,12 @@ namespace MockSchoolManagement
                 app.UseExceptionHandler("/Error");
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
-            
-
-            //app.UseDefaultFiles();
             app.UseStaticFiles();
-            //app.UseMvcWithDefaultRoute();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MockSchoolManagement API V1");
+            });
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();

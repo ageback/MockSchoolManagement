@@ -12,6 +12,7 @@ namespace MockSchoolManagement.Controllers
 
         public ErrorController(ILogger<ErrorController> logger) => this.logger = logger;
         [Route("Error/{statusCode}")]
+        [HttpGet]
         public IActionResult HttpStatusCodeHandler(int statusCode)
         {
             // 配合 app.UseStatusCodePagesWithReExecute("/Error/{0}") 获取url地址和参数
@@ -29,6 +30,7 @@ namespace MockSchoolManagement.Controllers
         }
 
         [Route("Error")]
+        [HttpGet]
         public IActionResult Error()
         {
             var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
