@@ -22,7 +22,10 @@ namespace MockSchoolManagement.Controllers
             _todoItemRepository = todoItemRepository;
         }
 
-        // GET:api/Todo
+        /// <summary>
+        /// 获取所有待办事项
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<List<TodoItem>>> GetAll()
         {
@@ -30,7 +33,11 @@ namespace MockSchoolManagement.Controllers
         }
 
         
-        // GET:api/Todo/5
+        /// <summary>
+        /// 通过Id获取待办事项
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetById(long id)
         {
@@ -38,7 +45,12 @@ namespace MockSchoolManagement.Controllers
             if (todoItem == null) { return NotFound(); }
             return todoItem;
         }
-        // PUT:api/Todo/5
+        /// <summary>
+        /// 更新待办事项
+        /// </summary>
+        /// <param name="id">待更新的事项Id</param>
+        /// <param name="todoItem">待更新的TodoItem对象</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(long id,TodoItem todoItem)
         {
@@ -51,7 +63,11 @@ namespace MockSchoolManagement.Controllers
             return NoContent();
         }
 
-        // POST:api/Todo
+        /// <summary>
+        /// 添加待办事项
+        /// </summary>
+        /// <param name="todoItem"></param>
+        /// <returns></returns> 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,6 +76,11 @@ namespace MockSchoolManagement.Controllers
             await _todoItemRepository.InsertAsync(todoItem);
             return CreatedAtAction(nameof(GetAll), new { id = todoItem.Id }, todoItem);
         }
+        /// <summary>
+        /// 删除指定Id的待办事项
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<TodoItem>> Delete(long id)

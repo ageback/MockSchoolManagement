@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -43,8 +45,32 @@ namespace MockSchoolManagement
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MockSchoolManagement PI", Version = "v1" });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "MockSchoolManagement PI",
+                    Version = "v1",
+                    Description = "为 MockSchoolManagement 系统，添加一个简单的 ASP.NET Core Web API 示例。",
+                    TermsOfService = new Uri("http://192.168.0.241:5000"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "LMH",
+                        Email = "lmh@wesoft.net.cn",
+                        Url = new Uri("http://192.168.0.241:5000")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Apache License 2.0",
+                        Url = new Uri("http://github.com")
+                    }
+                });
+                if (_env.IsDevelopment())
+                {
+                    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    c.IncludeXmlComments(xmlPath);
+                } 
             });
             // 设置所有令牌有效期为5小时
             services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromHours(5));
